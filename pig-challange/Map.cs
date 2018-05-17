@@ -30,9 +30,9 @@ namespace pig_challange
 
             for (int i = 0; i < 15; i++)
             {
-                this.agentA.DetermineStep();
-                this.agentB.DetermineStep();
-                this.pig.DetermineStep();
+                Tuple<int, int> newPositionAgentA = this.agentA.DetermineStep();
+                Tuple<int, int> newPositionAgentB = this.agentB.DetermineStep();
+                Tuple<int, int> newPositionPig = this.pig.DetermineStep();
 
                 this.Draw();
             }
