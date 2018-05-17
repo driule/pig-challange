@@ -8,5 +8,17 @@ namespace pig_challange
 {
     class Map
     {
+        Agent agentA, agentB;
+        Pig pig;
+
+        void Init()
+        {
+
+        }
+
+        void Loop()
+        {
+
+        }
     }
 }
