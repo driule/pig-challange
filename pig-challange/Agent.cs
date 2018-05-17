@@ -8,8 +8,14 @@ namespace pig_challange
 {
     class Agent
     {
-        private Tuple<int, int> Position { get; set; }
-        private int Score { get; set; }
+        public Tuple<int, int> Position;
+        public int Score;
+
+        public Agent(Tuple<int, int> startPosition)
+        {
+            this.Position = startPosition;
+            this.Score = 0;
+        }
 
         public Tuple<int,int> DetermineStep()
         {

@@ -8,7 +8,12 @@ namespace pig_challange
 {
     class Pig
     {
-        private Tuple<int, int> Position { get; set; }
+        public Tuple<int, int> Position;
+
+        public Pig(Tuple<int, int> startPosition)
+        {
+            this.Position = startPosition;
+        }
 
         public Tuple<int,int> DetermineStep()
         {
