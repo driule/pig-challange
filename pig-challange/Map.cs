@@ -11,12 +11,12 @@ namespace pig_challange
         Agent agentA, agentB;
         Pig pig;
 
-        void Init()
+        public void Init()
         {
 
         }
 
-        void Loop()
+        public void Loop()
         {
 
         }
