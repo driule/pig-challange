@@ -8,5 +8,12 @@ namespace pig_challange
 {
     class Agent
     {
+        private Tuple<int, int> Position { get; set; }
+        private int Score { get; set; }
+
+        public Tuple<int,int> DetermineStep()
+        {
+            return new Tuple<int, int>(1, 1);
+        }
     }
 }

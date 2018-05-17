@@ -8,15 +8,26 @@ namespace pig_challange
 {
     class Map
     {
-        Agent agentA, agentB;
-        Pig pig;
+        private Agent agentA, agentB;
+        private Pig pig;
+        private int[,] grid;
+        private int iteration;
+        
+        public Map()
+        {
+            agentA = new Agent();
+            agentB = new Agent();
+            pig = new Pig();
+            grid = new int[9, 9];
 
-        public void Init()
+        }
+
+        public void RunGame()
         {
 
         }
 
-        public void Loop()
+        public void Draw()
         {
 
         }
