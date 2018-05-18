@@ -8,6 +8,8 @@ namespace pig_challange
 {
     class Agent
     {
+        private Random randomizer = new Random();
+
         public Tuple<int, int> Position;
         public int Score;
 
@@ -17,9 +19,9 @@ namespace pig_challange
             this.Score = 0;
         }
 
-        public Tuple<int,int> DetermineStep()
+        public void DetermineStep(int[,] map)
         {
-            return new Tuple<int, int>(1, 1);
+            // TODO: smart movements
         }
     }
 }

@@ -8,7 +8,7 @@ namespace pig_challange
 {
     class Board
     {
-        Random rand = new Random();
+        Random randomizer = new Random();
 
         private Agent agentA, agentB;
         private Pig pig;
@@ -27,9 +27,9 @@ namespace pig_challange
         {
             for (int i = 0; i < 15; i++)
             {
-                Tuple<int, int> newPositionAgentA = this.agentA.DetermineStep();
-                Tuple<int, int> newPositionAgentB = this.agentB.DetermineStep();
-                Tuple<int, int> newPositionPig = this.pig.DetermineStep();
+                this.agentA.DetermineStep(this.map);
+                this.agentB.DetermineStep(this.map);
+                this.pig.DetermineStep(this.map, this.agentA, this.agentB);
 
                 this.Draw();
             }
@@ -76,8 +76,8 @@ namespace pig_challange
             int x = 0, y = 0;
             while (true)
             {
-                x = rand.Next(2, 7);
-                y = rand.Next(2, 7);
+                x = this.randomizer.Next(2, 7);
+                y = this.randomizer.Next(2, 7);
 
                 // check for obstacles
                 if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
