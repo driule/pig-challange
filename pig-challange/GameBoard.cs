@@ -8,19 +8,25 @@ namespace pig_challange
 {
     class GameBoard
     {
-        Random randomizer = new Random();
-
         private Agent agentA, agentB;
         private Pig pig;
         private Map map;
+
+        private Random randomizer;
         
         public GameBoard()
         {
-            this.agentA = new Agent(this.GetRandomStartPosition()); 
-            this.agentB = new Agent(this.GetRandomStartPosition());
-            this.pig = new Pig(this.GetRandomStartPosition());
+            this.randomizer = new Random();
+
+            this.agentA = new Agent(); 
+            this.agentB = new Agent();
+            this.pig = new Pig();
 
             this.map = new Map();
+
+            this.agentA.Position = this.GetRandomStartPosition();
+            this.agentB.Position = this.GetRandomStartPosition();
+            this.pig.Position = this.GetRandomStartPosition();
         }
 
         public void RunGame()
@@ -42,17 +48,15 @@ namespace pig_challange
         {
         }
 
-        // TODO: check if positions of agents and pig don't collide
         private Tuple<int,int> GetRandomStartPosition()
         {
             int x = 0, y = 0;
             while (true)
             {
-                x = this.randomizer.Next(2, 7);
-                y = this.randomizer.Next(2, 7);
+                x = this.randomizer.Next(2, 6);
+                y = this.randomizer.Next(2, 6);
 
-                // check for obstacles
-                if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
+                if (!this.map.IsCellEmpty(x, y, this.agentA, this.agentB, this.pig))
                 {
                     continue;
                 }

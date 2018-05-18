@@ -39,6 +39,35 @@ namespace pig_challange
             this.Grid[5, 5] = 1;
         }
 
+        public bool IsCellEmpty(int x, int y, Agent agentA, Agent agentB, Pig pig)
+        {
+            Tuple<int, int> position = new Tuple<int, int>(x, y);
+
+            // check for obstacles
+            if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
+            {
+                return false;
+            }
+
+            // check for agents and pig
+            if (agentA.Position.Equals(position))
+            {
+                return false;
+            }
+
+            if (agentB.Position.Equals(position))
+            {
+                return false;
+            }
+
+            if (pig.Position.Equals(position))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public void Draw(Agent agentA, Agent agentB, Pig pig)
         {
             for (int i = 0; i < 9; i++)

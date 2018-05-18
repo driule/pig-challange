@@ -8,14 +8,16 @@ namespace pig_challange
 {
     class Agent
     {
-        private Random randomizer = new Random();
+        public Tuple<int, int> Position { get; set; }
+        public int Score { get; set; }
 
-        public Tuple<int, int> Position;
-        public int Score;
+        private Random randomizer;
 
-        public Agent(Tuple<int, int> startPosition)
+        public Agent()
         {
-            this.Position = startPosition;
+            this.randomizer = new Random();
+
+            this.Position = new Tuple<int, int>(-1, -1);
             this.Score = 0;
         }
 

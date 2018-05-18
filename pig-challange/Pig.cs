@@ -8,18 +8,19 @@ namespace pig_challange
 {
     class Pig
     {
-        private Random randomizer = new Random();
+        public Tuple<int, int> Position { get; set; }
 
-        public Tuple<int, int> Position;
+        private Random randomizer;
 
-        public Pig(Tuple<int, int> startPosition)
+        public Pig()
         {
-            this.Position = startPosition;
+            this.randomizer = new Random();
+            this.Position = new Tuple<int, int>(-1, -1);
         }
 
         public void DetermineStep(Map map, Agent agentA, Agent agentB)
         {
-            int moveDirection = this.randomizer.Next(0, 4);
+            int moveDirection = this.randomizer.Next(0, 3);
 
             if (moveDirection == 0)
             {
