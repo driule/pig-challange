@@ -19,7 +19,7 @@ namespace pig_challange
             this.Score = 0;
         }
 
-        public void DetermineStep(int[,] map)
+        public void DetermineStep(Map map)
         {
             // TODO: smart movements
         }

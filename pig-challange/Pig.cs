@@ -17,7 +17,7 @@ namespace pig_challange
             this.Position = startPosition;
         }
 
-        public void DetermineStep(int[,] map, Agent agentA, Agent agentB)
+        public void DetermineStep(Map map, Agent agentA, Agent agentB)
         {
             int moveDirection = this.randomizer.Next(0, 4);
 
@@ -51,11 +51,11 @@ namespace pig_challange
             }
         }
 
-        private bool IsCellFree(int x, int y, int[,] map, Agent agentA, Agent agentB)
+        private bool IsCellFree(int x, int y, Map map, Agent agentA, Agent agentB)
         {
             Tuple<int, int> position = new Tuple<int, int>(x, y);
 
-            if (map[x, y] != 1 && !agentA.Position.Equals(position) && !agentB.Position.Equals(position))
+            if (map.Grid[x, y] != 1 && !agentA.Position.Equals(position) && !agentB.Position.Equals(position))
             {
                 return true;
             }
