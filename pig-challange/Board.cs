@@ -70,13 +70,25 @@ namespace pig_challange
             Console.WriteLine();
         }
 
+        // TODO: check if positions of agents and pig don't collide
         private Tuple<int,int> GetRandomStartPosition()
         {
-            int y = rand.Next(2, 7);
-            int x = rand.Next(2, 7);
+            int x = 0, y = 0;
+            while (true)
+            {
+                x = rand.Next(2, 7);
+                y = rand.Next(2, 7);
+
+                // check for obstacles
+                if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
+                {
+                    continue;
+                }
+
+                break;
+            }
 
             return new Tuple<int, int>(y, x);
-            // TODO: check if positions don't collide
         }
 
         private void InitMap()
