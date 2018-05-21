@@ -33,9 +33,9 @@ namespace pig_challange
         {
             for (int i = 0; i < 15; i++)
             {
-                this.agentA.DetermineStep(this.map, this.pig, this.agentA, this.agentB);
-                this.agentB.DetermineStep(this.map, this.pig, this.agentA, this.agentB);
-                this.pig.DetermineStep(this.map, this.pig, this.agentA, this.agentB);
+                this.agentA.DetermineStep(this.map, this.pig, this.agentB);
+                this.agentB.DetermineStep(this.map, this.pig, this.agentA);
+                this.pig.DetermineStep(this.map, this.agentA, this.agentB);
 
                 this.map.Draw(this.agentA, this.agentB, this.pig);
 

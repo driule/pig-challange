@@ -12,13 +12,11 @@ namespace pig_challange
 
         protected Random randomizer;
 
-        public abstract void DetermineStep(Map map, Pig pig, Agent agentA, Agent agentB);
-
-        protected bool IsCellFree(int x, int y, Map map, Pig pig, Agent agentA, Agent agentB)
+        protected bool IsCellFree(int x, int y, Map map, BasicAgent pigOrAgent, BasicAgent agent)
         {
             Tuple<int, int> position = new Tuple<int, int>(x, y);
 
-            if (map.Grid[x, y] != 1 && !pig.Position.Equals(position) && !agentA.Position.Equals(position) && !agentB.Position.Equals(position))
+            if (map.Grid[x, y] != 1 && !pigOrAgent.Position.Equals(position) && !agent.Position.Equals(position))
             {
                 return true;
             }
