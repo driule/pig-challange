@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent.cs" />
+    <Compile Include="BasicAgent.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Pig.cs" />

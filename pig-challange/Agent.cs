@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace pig_challange
 {
-    class Agent
+    class Agent : BasicAgent
     {
-        public Tuple<int, int> Position { get; set; }
         public int Score { get; set; }
-
-        private Random randomizer;
 
         public Agent()
         {
@@ -21,7 +18,7 @@ namespace pig_challange
             this.Score = 0;
         }
 
-        public void DetermineStep(Map map)
+        public override void DetermineStep(Map map, Pig pig, Agent agentA, Agent agentB)
         {
             // TODO: smart movements
         }
