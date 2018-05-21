@@ -13,17 +13,17 @@ namespace pig_challange
         public Map()
         {
             this.Grid = new int[9, 9];
-            for (int i = 0; i < 9; i++)
+            for (int y = 0; y < 9; y++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int x = 0; x < 9; x++)
                 {
-                    if (i == 0 || j == 0 || i == 8 || j == 8 || i == 1 || j == 1 || i == 7 || j == 7)
+                    if (y == 0 || x == 0 || y == 8 || x == 8 || y == 1 || x == 1 || y == 7 || x == 7)
                     {
-                        this.Grid[i, j] = 1;
+                        this.Grid[y, x] = 1;
                     }
                     else
                     {
-                        this.Grid[i, j] = 0;
+                        this.Grid[y, x] = 0;
                     }
                 }
             }
@@ -44,10 +44,14 @@ namespace pig_challange
             Tuple<int, int> position = new Tuple<int, int>(x, y);
 
             // check for obstacles
-            if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
-            {
+            if (this.Grid[y, x] == 1)
                 return false;
-            }
+
+            //// check for obstacles
+            //if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
+            //{
+            //    return false;
+            //}
 
             // check for agents and pig
             if (agentA.Position.Equals(position))
