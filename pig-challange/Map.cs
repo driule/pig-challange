@@ -74,28 +74,28 @@ namespace pig_challange
 
         public void Draw(Agent agentA, Agent agentB, Pig pig)
         {
-            for (int i = 0; i < 9; i++)
+            for (int y = 0; y < 9; y++)
             {
                 Console.Write("|");
-                for (int j = 0; j < 9; j++)
+                for (int x = 0; x < 9; x++)
                 {
-                    if (agentA.Position.Equals(new Tuple<int, int>(i, j)))
+                    if (agentA.Position.Equals(new Tuple<int, int>(y, x)))
                     {
                         Console.Write("A");
                     }
-                    else if (agentB.Position.Equals(new Tuple<int, int>(i, j)))
+                    else if (agentB.Position.Equals(new Tuple<int, int>(y, x)))
                     {
                         Console.Write("B");
                     }
-                    else if (pig.Position.Equals(new Tuple<int, int>(i, j)))
+                    else if (pig.Position.Equals(new Tuple<int, int>(y, x)))
                     {
                         Console.Write("o");
                     }
-                    else if (this.Grid[i, j] == 0)
+                    else if (this.Grid[y, x] == 0)
                     {
                         Console.Write(" ");
                     }
-                    else if (this.Grid[i, j] == 1)
+                    else if (this.Grid[y, x] == 1)
                     {
                         Console.Write("X");
                     }
