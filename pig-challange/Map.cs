@@ -39,9 +39,9 @@ namespace pig_challange
             this.Grid[5, 5] = 1;
         }
 
-        public bool IsCellEmpty(int x, int y, Agent agentA, Agent agentB, Pig pig)
+        public bool IsCellEmpty(int y, int x, Agent agentA, Agent agentB, Pig pig)
         {
-            Tuple<int, int> position = new Tuple<int, int>(x, y);
+            Tuple<int, int> position = new Tuple<int, int>(y, x);
 
             // check for obstacles
             if (this.Grid[y, x] == 1)

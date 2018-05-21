@@ -12,11 +12,11 @@ namespace pig_challange
 
         protected Random randomizer;
 
-        protected bool IsCellFree(int x, int y, Map map, BasicAgent pigOrAgent, BasicAgent agent)
+        protected bool IsCellFree(int y, int x, Map map, BasicAgent pigOrAgent, BasicAgent agent)
         {
-            Tuple<int, int> position = new Tuple<int, int>(x, y);
+            Tuple<int, int> position = new Tuple<int, int>(y, x);
 
-            if (map.Grid[x, y] != 1 && !pigOrAgent.Position.Equals(position) && !agent.Position.Equals(position))
+            if (map.Grid[y, x] != 1 && !pigOrAgent.Position.Equals(position) && !agent.Position.Equals(position))
             {
                 return true;
             }

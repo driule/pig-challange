@@ -56,7 +56,7 @@ namespace pig_challange
                 x = this.randomizer.Next(2, 6);
                 y = this.randomizer.Next(2, 6);
 
-                if (!this.map.IsCellEmpty(x, y, this.agentA, this.agentB, this.pig))
+                if (!this.map.IsCellEmpty(y, x, this.agentA, this.agentB, this.pig))
                 {
                     continue;
                 }
