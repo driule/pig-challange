@@ -45,6 +45,7 @@
     <Compile Include="Agent.cs" />
     <Compile Include="BasicAgent.cs" />
     <Compile Include="GameBoard.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Pig.cs" />
     <Compile Include="Program.cs" />
