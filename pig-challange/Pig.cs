@@ -68,7 +68,5 @@ namespace pig_challange
                 }
             }
         }
-
-        
     }
 }

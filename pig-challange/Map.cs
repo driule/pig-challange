@@ -8,7 +8,13 @@ namespace pig_challange
 {
     class Map
     {
-        public int[,] Grid { get; }
+        public enum CellType {
+            Empty = 0,
+            Obstacle = 1,
+            Exit = 2
+        }
+
+        public CellType[,] Grid { get; }
 
         public BasicAgent AgentA { get; }
         public BasicAgent AgentB { get; }
@@ -20,31 +26,31 @@ namespace pig_challange
             this.AgentB = agentB;
             this.Pig = pig;
 
-            this.Grid = new int[9, 9];
+            this.Grid = new CellType[9, 9];
             for (int y = 0; y < 9; y++)
             {
                 for (int x = 0; x < 9; x++)
                 {
                     if (y == 0 || x == 0 || y == 8 || x == 8 || y == 1 || x == 1 || y == 7 || x == 7)
                     {
-                        this.Grid[y, x] = 1;
+                        this.Grid[y, x] = CellType.Obstacle;
                     }
                     else
                     {
-                        this.Grid[y, x] = 0;
+                        this.Grid[y, x] = CellType.Empty;
                     }
                 }
             }
 
             // exits
-            this.Grid[4, 1] = 0;
-            this.Grid[4, 7] = 0;
+            this.Grid[4, 1] = CellType.Exit;
+            this.Grid[4, 7] = CellType.Exit;
 
             // obstacles
-            this.Grid[3, 3] = 1;
-            this.Grid[3, 5] = 1;
-            this.Grid[5, 3] = 1;
-            this.Grid[5, 5] = 1;
+            this.Grid[3, 3] = CellType.Obstacle;
+            this.Grid[3, 5] = CellType.Obstacle;
+            this.Grid[5, 3] = CellType.Obstacle;
+            this.Grid[5, 5] = CellType.Obstacle;
         }
 
         public bool IsCellEmpty(int y, int x)
@@ -52,7 +58,7 @@ namespace pig_challange
             Tuple<int, int> position = new Tuple<int, int>(y, x);
 
             // check for obstacles
-            if (this.Grid[y, x] == 1)
+            if (this.Grid[y, x] == CellType.Obstacle)
             {
                 return false;
             }
@@ -95,11 +101,11 @@ namespace pig_challange
                     {
                         Console.Write("o");
                     }
-                    else if (this.Grid[y, x] == 0)
+                    else if (this.Grid[y, x] == CellType.Empty || this.Grid[y, x] == CellType.Exit)
                     {
                         Console.Write(" ");
                     }
-                    else if (this.Grid[y, x] == 1)
+                    else if (this.Grid[y, x] == CellType.Obstacle)
                     {
                         Console.Write("X");
                     }
