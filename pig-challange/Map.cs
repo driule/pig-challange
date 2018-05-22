@@ -8,7 +8,8 @@ namespace pig_challange
 {
     class Map
     {
-        public enum CellType {
+        public enum CellType
+        {
             Empty = 0,
             Obstacle = 1,
             Exit = 2
