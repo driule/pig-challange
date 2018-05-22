@@ -22,7 +22,7 @@ namespace pig_challange
             this.agentB = new Agent();
             this.pig = new Pig();
 
-            this.map = new Map();
+            this.map = new Map(this.agentA, this.agentB, this.pig);
 
             this.agentA.Position = this.GetRandomStartPosition();
             this.agentB.Position = this.GetRandomStartPosition();
@@ -33,11 +33,11 @@ namespace pig_challange
         {
             for (int i = 0; i < 15; i++)
             {
-                this.agentA.DetermineStep(this.map, this.pig, this.agentB);
-                this.agentB.DetermineStep(this.map, this.pig, this.agentA);
-                this.pig.DetermineStep(this.map, this.agentA, this.agentB);
+                this.agentA.DetermineStep(this.map);
+                this.agentB.DetermineStep(this.map);
+                this.pig.DetermineStep(this.map);
 
-                this.map.Draw(this.agentA, this.agentB, this.pig);
+                this.map.Draw();
 
                 this.EvaluateGameState();
             }
@@ -56,7 +56,7 @@ namespace pig_challange
                 x = this.randomizer.Next(2, 6);
                 y = this.randomizer.Next(2, 6);
 
-                if (!this.map.IsCellEmpty(y, x, this.agentA, this.agentB, this.pig))
+                if (!this.map.IsCellEmpty(y, x))
                 {
                     continue;
                 }

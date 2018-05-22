@@ -18,7 +18,7 @@ namespace pig_challange
             this.Score = 0;
         }
 
-        public void DetermineStep(Map map, Pig pig, Agent otherAgent)
+        public override void DetermineStep(Map map, int tries = 0)
         {
             // TODO: smart movements
         }

@@ -10,8 +10,16 @@ namespace pig_challange
     {
         public int[,] Grid { get; }
 
-        public Map()
+        public BasicAgent AgentA { get; }
+        public BasicAgent AgentB { get; }
+        public BasicAgent Pig { get; }
+
+        public Map(BasicAgent agentA, BasicAgent agentB, BasicAgent pig)
         {
+            this.AgentA = agentA;
+            this.AgentB = agentB;
+            this.Pig = pig;
+
             this.Grid = new int[9, 9];
             for (int y = 0; y < 9; y++)
             {
@@ -39,32 +47,28 @@ namespace pig_challange
             this.Grid[5, 5] = 1;
         }
 
-        public bool IsCellEmpty(int y, int x, Agent agentA, Agent agentB, Pig pig)
+        public bool IsCellEmpty(int y, int x)
         {
             Tuple<int, int> position = new Tuple<int, int>(y, x);
 
             // check for obstacles
             if (this.Grid[y, x] == 1)
+            {
                 return false;
-
-            //// check for obstacles
-            //if (x == 3 && y == 3 || x == 3 && y == 5 || x == 5 && y == 3 || x == 5 && y == 5)
-            //{
-            //    return false;
-            //}
+            }
 
             // check for agents and pig
-            if (agentA.Position.Equals(position))
+            if (this.AgentA.Position.Equals(position))
             {
                 return false;
             }
 
-            if (agentB.Position.Equals(position))
+            if (this.AgentB.Position.Equals(position))
             {
                 return false;
             }
 
-            if (pig.Position.Equals(position))
+            if (this.Pig.Position.Equals(position))
             {
                 return false;
             }
@@ -72,22 +76,22 @@ namespace pig_challange
             return true;
         }
 
-        public void Draw(Agent agentA, Agent agentB, Pig pig)
+        public void Draw()
         {
             for (int y = 0; y < 9; y++)
             {
                 Console.Write("|");
                 for (int x = 0; x < 9; x++)
                 {
-                    if (agentA.Position.Equals(new Tuple<int, int>(y, x)))
+                    if (this.AgentA.Position.Equals(new Tuple<int, int>(y, x)))
                     {
                         Console.Write("A");
                     }
-                    else if (agentB.Position.Equals(new Tuple<int, int>(y, x)))
+                    else if (this.AgentB.Position.Equals(new Tuple<int, int>(y, x)))
                     {
                         Console.Write("B");
                     }
-                    else if (pig.Position.Equals(new Tuple<int, int>(y, x)))
+                    else if (this.Pig.Position.Equals(new Tuple<int, int>(y, x)))
                     {
                         Console.Write("o");
                     }
