@@ -54,6 +54,16 @@ namespace pig_challange
             this.Grid[5, 5] = CellType.Obstacle;
         }
 
+        public bool IsCellExit(int y, int x)
+        {
+            if (this.Grid[y, x] == CellType.Exit)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public bool IsCellEmpty(int y, int x)
         {
             Tuple<int, int> position = new Tuple<int, int>(y, x);

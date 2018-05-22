@@ -12,8 +12,11 @@ namespace pig_challange
         {
             Console.WriteLine("welcome to pig challange!");
 
-            GameBoard gameBoard = new GameBoard();
-            gameBoard.RunGame();
+            for (int i = 0; i < 1; i++)
+            {
+                GameBoard gameBoard = new GameBoard();
+                gameBoard.RunGame();
+            }
 
             Console.ReadLine();
         }

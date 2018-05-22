@@ -8,6 +8,17 @@ namespace pig_challange
 {
     class GameBoard
     {
+        const int MAX_ITERATIONS = 25;
+
+        public enum GameState
+        {
+            InProgress = -1,
+            IterationsExceeded = 0,
+            AgentAQuit = 1,
+            AgentBQuit = 2,
+            PigCaught = 3
+        }
+
         private Agent agentA, agentB;
         private Pig pig;
         private Map map;
@@ -31,7 +42,7 @@ namespace pig_challange
 
         public void RunGame()
         {
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < MAX_ITERATIONS; i++)
             {
                 this.agentA.DetermineStep(this.map);
                 this.agentB.DetermineStep(this.map);
@@ -39,13 +50,57 @@ namespace pig_challange
 
                 this.map.Draw();
 
-                this.EvaluateGameState();
+                GameState state = this.EvaluateGameState(i + 1);
+
+                if (state != GameState.InProgress)
+                {
+                    this.HandleGameEnding(state);
+                    break;
+                }
             }
         }
 
         // TODO: implement game end (if pig was caught or agent exited) and score tracking
-        private void EvaluateGameState()
+        private GameState EvaluateGameState(int iteration)
         {
+            if (iteration == MAX_ITERATIONS)
+            {
+                Console.WriteLine("Game finished!");
+
+                return GameState.IterationsExceeded;
+            }
+
+            if (this.map.IsCellExit(this.agentA.Position.Item1, this.agentA.Position.Item2))
+            {
+                Console.WriteLine("Agent A quit");
+
+                return GameState.AgentAQuit;
+            }
+
+            if (this.map.IsCellExit(this.agentB.Position.Item1, this.agentB.Position.Item2))
+            {
+                Console.WriteLine("Agent B quit");
+
+                return GameState.AgentBQuit;
+            }
+
+            // pig caught
+            int y = this.pig.Position.Item1;
+            int x = this.pig.Position.Item2;
+
+            if (!this.map.IsCellEmpty(y + 1, x) && !this.map.IsCellEmpty(y, x + 1) && !this.map.IsCellEmpty(y - 1, x) && !this.map.IsCellEmpty(y, x - 1))
+            {
+                Console.WriteLine("Pig was caught");
+
+                return GameState.PigCaught;
+            }
+
+            return GameState.InProgress;
+        }
+
+        private void HandleGameEnding(GameState state)
+        {
+            // TODO: handle score
         }
 
         private Tuple<int,int> GetRandomStartPosition()

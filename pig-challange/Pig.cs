@@ -25,7 +25,7 @@ namespace pig_challange
 
             if (moveDirection == 0)
             {
-                if (map.IsCellEmpty(this.Position.Item1 + 1, this.Position.Item2))
+                if (map.IsCellEmpty(this.Position.Item1 + 1, this.Position.Item2) && !map.IsCellExit(this.Position.Item1 + 1, this.Position.Item2))
                 {
                     this.Position = new Tuple<int, int>(this.Position.Item1 + 1, this.Position.Item2);
                 }
@@ -36,7 +36,7 @@ namespace pig_challange
             }
             else if (moveDirection == 1)
             {
-                if (map.IsCellEmpty(this.Position.Item1, this.Position.Item2 + 1))
+                if (map.IsCellEmpty(this.Position.Item1, this.Position.Item2 + 1) && !map.IsCellExit(this.Position.Item1, this.Position.Item2 + 1))
                 {
                     this.Position = new Tuple<int, int>(this.Position.Item1, this.Position.Item2 + 1);
                 }
@@ -47,7 +47,7 @@ namespace pig_challange
             }
             else if (moveDirection == 2)
             {
-                if (map.IsCellEmpty(this.Position.Item1 - 1, this.Position.Item2))
+                if (map.IsCellEmpty(this.Position.Item1 - 1, this.Position.Item2) && !map.IsCellExit(this.Position.Item1 - 1, this.Position.Item2))
                 {
                     this.Position = new Tuple<int, int>(this.Position.Item1 - 1, this.Position.Item2);
                 }
@@ -58,7 +58,7 @@ namespace pig_challange
             }
             else if (moveDirection == 3)
             {
-                if (map.IsCellEmpty(this.Position.Item1, this.Position.Item2 - 1))
+                if (map.IsCellEmpty(this.Position.Item1, this.Position.Item2 - 1) && !map.IsCellExit(this.Position.Item1, this.Position.Item2 - 1))
                 {
                     this.Position = new Tuple<int, int>(this.Position.Item1, this.Position.Item2 - 1);
                 }
