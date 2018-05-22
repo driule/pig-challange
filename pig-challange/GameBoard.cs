@@ -40,7 +40,7 @@ namespace pig_challange
             this.pig.Position = this.GetRandomStartPosition();
         }
 
-        public Tuple<int,int> RunGame()
+        public Tuple<int, int> RunGame()
         {
             for (int i = 0; i < MAX_ITERATIONS; i++)
             {
@@ -54,14 +54,13 @@ namespace pig_challange
 
                 if (state != GameState.InProgress)
                 {
-                    return this.HandleGameEnding(state, i + 1);
+                    return this.CalculateScores(state, i + 1);
                 }
             }
 
             throw new Exception("the game end check didn't fire successfully");
         }
 
-        // TODO: implement game end (if pig was caught or agent exited) and score tracking
         private GameState EvaluateGameState(int iteration)
         {
             if (this.map.IsCellExit(this.agentA.Position.Item1, this.agentA.Position.Item2))
@@ -78,10 +77,8 @@ namespace pig_challange
                 return GameState.AgentBQuit;
             }
 
-            // pig caught
             int y = this.pig.Position.Item1;
             int x = this.pig.Position.Item2;
-
             if (!this.map.IsCellEmpty(y + 1, x) && !this.map.IsCellEmpty(y, x + 1) && !this.map.IsCellEmpty(y - 1, x) && !this.map.IsCellEmpty(y, x - 1))
             {
                 Console.WriteLine("Pig was caught");
@@ -99,10 +96,8 @@ namespace pig_challange
             return GameState.InProgress;
         }
 
-        private Tuple<int,int> HandleGameEnding(GameState state, int iteration)
+        private Tuple<int, int> CalculateScores(GameState state, int iteration)
         {
-            // TODO: handle score
-
             switch (state)
             {
                 case GameState.IterationsExceeded:
@@ -114,8 +109,7 @@ namespace pig_challange
                 case GameState.PigCaught:
                     return new Tuple<int, int>(25 - iteration, 25 - iteration);
                 default:
-                    throw new Exception("state not handled in HandleGameState");
-                    break;
+                    throw new Exception("State cannot be handled!");
             }
         }
 

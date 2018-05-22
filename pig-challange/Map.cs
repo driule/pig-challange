@@ -126,7 +126,6 @@ namespace pig_challange
                 Console.WriteLine();
             }
             Console.WriteLine();
-            Console.WriteLine();
         }
     }
 }

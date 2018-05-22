@@ -15,7 +15,7 @@ namespace pig_challange
             int totalScoreAgentA = 0;
             int totalScoreAgentB = 0;
 
-            Console.WriteLine("welcome to pig challange!");
+            Console.WriteLine("Welcome to pig challange!");
 
             for (int i = 0; i < NUM_GAMES; i++)
             {
@@ -23,15 +23,14 @@ namespace pig_challange
                 scoreList[i] = gameBoard.RunGame();
             }
 
-            Console.WriteLine("Scores for the two players:");
-            for(int i = 0; i < NUM_GAMES; i++)
+            Console.WriteLine("Scores for the two agents:");
+            for (int i = 0; i < NUM_GAMES; i++)
             {
-                Console.WriteLine($"Player A: {scoreList[i].Item1}   Player B: {scoreList[i].Item2}");
+                Console.WriteLine($" Agent A: {scoreList[i].Item1}, Agent B: {scoreList[i].Item2}");
                 totalScoreAgentA += scoreList[i].Item1;
                 totalScoreAgentB += scoreList[i].Item2;
             }
-            Console.WriteLine($"Total scores: \n Player A: {totalScoreAgentA}   Player B: {totalScoreAgentB}");
-
+            Console.WriteLine($"Total scores: \n Agent A: {totalScoreAgentA}, Agent B: {totalScoreAgentB}");
 
             Console.ReadLine();
         }
