@@ -93,8 +93,9 @@ namespace pig_challange
             return true;
         }
 
-        public void Draw()
+        public void Draw(int iteration)
         {
+            Console.WriteLine($"Iteration {iteration}");
             for (int y = 0; y < 9; y++)
             {
                 Console.Write("|");

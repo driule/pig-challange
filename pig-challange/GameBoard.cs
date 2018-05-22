@@ -40,7 +40,7 @@ namespace pig_challange
             this.pig.Position = this.GetRandomStartPosition();
         }
 
-        public void RunGame()
+        public Tuple<int,int> RunGame()
         {
             for (int i = 0; i < MAX_ITERATIONS; i++)
             {
@@ -48,28 +48,22 @@ namespace pig_challange
                 this.agentB.DetermineStep(this.map);
                 this.pig.DetermineStep(this.map);
 
-                this.map.Draw();
+                this.map.Draw(i + 1);
 
                 GameState state = this.EvaluateGameState(i + 1);
 
                 if (state != GameState.InProgress)
                 {
-                    this.HandleGameEnding(state);
-                    break;
+                    return this.HandleGameEnding(state, i + 1);
                 }
             }
+
+            throw new Exception("the game end check didn't fire successfully");
         }
 
         // TODO: implement game end (if pig was caught or agent exited) and score tracking
         private GameState EvaluateGameState(int iteration)
         {
-            if (iteration == MAX_ITERATIONS)
-            {
-                Console.WriteLine("Game finished!");
-
-                return GameState.IterationsExceeded;
-            }
-
             if (this.map.IsCellExit(this.agentA.Position.Item1, this.agentA.Position.Item2))
             {
                 Console.WriteLine("Agent A quit");
@@ -95,12 +89,34 @@ namespace pig_challange
                 return GameState.PigCaught;
             }
 
+            if (iteration == MAX_ITERATIONS)
+            {
+                Console.WriteLine("Game finished!");
+
+                return GameState.IterationsExceeded;
+            }
+
             return GameState.InProgress;
         }
 
-        private void HandleGameEnding(GameState state)
+        private Tuple<int,int> HandleGameEnding(GameState state, int iteration)
         {
             // TODO: handle score
+
+            switch (state)
+            {
+                case GameState.IterationsExceeded:
+                    return new Tuple<int, int>(-25, -25);
+                case GameState.AgentAQuit:
+                    return new Tuple<int, int>(5 - iteration, -iteration);
+                case GameState.AgentBQuit:
+                    return new Tuple<int, int>(-iteration, 5 - iteration);
+                case GameState.PigCaught:
+                    return new Tuple<int, int>(25 - iteration, 25 - iteration);
+                default:
+                    throw new Exception("state not handled in HandleGameState");
+                    break;
+            }
         }
 
         private Tuple<int,int> GetRandomStartPosition()
