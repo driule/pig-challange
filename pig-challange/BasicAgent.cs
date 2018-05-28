@@ -11,6 +11,6 @@ namespace pig_challange
         public Tuple<int, int> Position { get; set; }
         protected Random randomizer;
 
-        abstract public void DetermineStep(Map map, int tries = 0);
+        abstract public void DetermineStep(Map map, State state);
     }
 }

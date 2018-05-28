@@ -8,31 +8,15 @@ namespace pig_challange
 {
     class Program
     {
-        const int NUM_GAMES = 5;
+        const int NUM_GAMES = 1;
+        const int MAX_ITERATIONS = 25;
         static void Main(string[] args)
         {
-            Tuple<int, int>[] scoreList = new Tuple<int, int>[NUM_GAMES];
-            int totalScoreAgentA = 0;
-            int totalScoreAgentB = 0;
+            Console.WriteLine("Welcome to the pig challange!");
+            Console.WriteLine("Press Enter to start a new tournament.");
 
-            Console.WriteLine("Welcome to pig challange!");
-
-            for (int i = 0; i < NUM_GAMES; i++)
-            {
-                GameBoard gameBoard = new GameBoard();
-                scoreList[i] = gameBoard.RunGame();
-            }
-
-            Console.WriteLine("Scores for the two agents:");
-            for (int i = 0; i < NUM_GAMES; i++)
-            {
-                Console.WriteLine($" Agent A: {scoreList[i].Item1}, Agent B: {scoreList[i].Item2}");
-                totalScoreAgentA += scoreList[i].Item1;
-                totalScoreAgentB += scoreList[i].Item2;
-            }
-            Console.WriteLine($"Total scores: \n Agent A: {totalScoreAgentA}, Agent B: {totalScoreAgentB}");
-
-            Console.ReadLine();
+            Tournament tour = new Tournament(NUM_GAMES, MAX_ITERATIONS);
+            tour.RunTournament();
         }
     }
 }

@@ -8,17 +8,30 @@ namespace pig_challange
 {
     class Agent : BasicAgent
     {
-        public int Score { get; set; }
+        private int Identifier { get;} //0 for agent A, 1 for agent B
 
-        public Agent()
+
+        public Agent(int identifier)
         {
+            this.Identifier = identifier;
             this.randomizer = new Random();
-
-            this.Position = new Tuple<int, int>(-1, -1);
-            this.Score = 0;
         }
 
-        public override void DetermineStep(Map map, int tries = 0)
+        public override void DetermineStep(Map map, State state)
+        {
+            int[] position = state.GetPosition(this.Identifier);
+
+            //Determine all available adjacent positions
+            List<int[]> positions = map.AvailablePositions(position, state);
+
+            //Get a random new position
+            int[] newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
+
+            state.move(this.Identifier, newPosition);
+        }
+
+        /*
+        public override void DetermineStep(Map map, GameState state, int tries = 0)
         {
             // TODO: smart movements
 
@@ -37,7 +50,7 @@ namespace pig_challange
                 }
                 else
                 {
-                    this.DetermineStep(map, tries + 1);
+                    this.DetermineStep(map, state, tries + 1);
                 }
             }
             else if (moveDirection == 1)
@@ -48,7 +61,7 @@ namespace pig_challange
                 }
                 else
                 {
-                    this.DetermineStep(map, tries + 1);
+                    this.DetermineStep(map, state, tries + 1);
                 }
             }
             else if (moveDirection == 2)
@@ -59,7 +72,7 @@ namespace pig_challange
                 }
                 else
                 {
-                    this.DetermineStep(map, tries + 1);
+                    this.DetermineStep(map, state, tries + 1);
                 }
             }
             else if (moveDirection == 3)
@@ -70,9 +83,9 @@ namespace pig_challange
                 }
                 else
                 {
-                    this.DetermineStep(map, tries + 1);
+                    this.DetermineStep(map, state, tries + 1);
                 }
             }
-        }
+        } */
     }
 }

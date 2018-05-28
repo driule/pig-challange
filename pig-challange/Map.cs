@@ -17,16 +17,8 @@ namespace pig_challange
 
         public CellType[,] Grid { get; }
 
-        public BasicAgent AgentA { get; }
-        public BasicAgent AgentB { get; }
-        public BasicAgent Pig { get; }
-
-        public Map(BasicAgent agentA, BasicAgent agentB, BasicAgent pig)
+        public Map()
         {
-            this.AgentA = agentA;
-            this.AgentB = agentB;
-            this.Pig = pig;
-
             this.Grid = new CellType[9, 9];
             for (int y = 0; y < 9; y++)
             {
@@ -34,18 +26,18 @@ namespace pig_challange
                 {
                     if (y == 0 || x == 0 || y == 8 || x == 8 || y == 1 || x == 1 || y == 7 || x == 7)
                     {
-                        this.Grid[y, x] = CellType.Obstacle;
+                        this.Grid[x, y] = CellType.Obstacle;
                     }
                     else
                     {
-                        this.Grid[y, x] = CellType.Empty;
+                        this.Grid[x, y] = CellType.Empty;
                     }
                 }
             }
 
             // exits
-            this.Grid[4, 1] = CellType.Exit;
-            this.Grid[4, 7] = CellType.Exit;
+            this.Grid[1, 4] = CellType.Exit;
+            this.Grid[7, 4] = CellType.Exit;
 
             // obstacles
             this.Grid[3, 3] = CellType.Obstacle;
@@ -54,9 +46,9 @@ namespace pig_challange
             this.Grid[5, 5] = CellType.Obstacle;
         }
 
-        public bool IsCellExit(int y, int x)
+        public bool IsCellExit(int x, int y)
         {
-            if (this.Grid[y, x] == CellType.Exit)
+            if (this.Grid[x, y] == CellType.Exit)
             {
                 return true;
             }
@@ -64,28 +56,27 @@ namespace pig_challange
             return false;
         }
 
-        public bool IsCellEmpty(int y, int x)
+        public bool IsCellEmpty(int x, int y, State state)
         {
-            Tuple<int, int> position = new Tuple<int, int>(y, x);
-
+            int[] position = new int[] { x, y };
             // check for obstacles
-            if (this.Grid[y, x] == CellType.Obstacle)
+            if (this.Grid[position[0], position[1]] == CellType.Obstacle)
             {
                 return false;
             }
 
             // check for agents and pig
-            if (this.AgentA.Position.Equals(position))
+            if (state.PositionA.SequenceEqual(position))
             {
                 return false;
             }
 
-            if (this.AgentB.Position.Equals(position))
+            if (state.PositionB.SequenceEqual(position))
             {
                 return false;
             }
 
-            if (this.Pig.Position.Equals(position))
+            if (state.PositionPig.SequenceEqual(position))
             {
                 return false;
             }
@@ -93,7 +84,7 @@ namespace pig_challange
             return true;
         }
 
-        public void Draw(int iteration)
+        public void Draw(int iteration, State state)
         {
             Console.WriteLine($"Iteration {iteration}");
             for (int y = 0; y < 9; y++)
@@ -101,23 +92,24 @@ namespace pig_challange
                 Console.Write("|");
                 for (int x = 0; x < 9; x++)
                 {
-                    if (this.AgentA.Position.Equals(new Tuple<int, int>(y, x)))
+                    int[] position = new int[] { x, y };
+                    if (state.PositionA.SequenceEqual(position))
                     {
                         Console.Write("A");
                     }
-                    else if (this.AgentB.Position.Equals(new Tuple<int, int>(y, x)))
+                    else if (state.PositionB.SequenceEqual(position))
                     {
                         Console.Write("B");
                     }
-                    else if (this.Pig.Position.Equals(new Tuple<int, int>(y, x)))
+                    else if (state.PositionPig.SequenceEqual(position))
                     {
                         Console.Write("o");
                     }
-                    else if (this.Grid[y, x] == CellType.Empty || this.Grid[y, x] == CellType.Exit)
+                    else if (this.Grid[x, y] == CellType.Empty || this.Grid[x, y] == CellType.Exit)
                     {
                         Console.Write(" ");
                     }
-                    else if (this.Grid[y, x] == CellType.Obstacle)
+                    else if (this.Grid[x, y] == CellType.Obstacle)
                     {
                         Console.Write("X");
                     }
@@ -126,6 +118,27 @@ namespace pig_challange
                 Console.WriteLine();
             }
             Console.WriteLine();
+            state.Print();
+        }
+
+        //Returns a list of all available positions in the agent's vacinity
+        //TODO possible just use a deterministic list of available positions (there are few in total)
+        public List<int[]> AvailablePositions(int[] position, State state)
+        {
+            List<int[]> availablePositions = new List<int[]>
+            {
+                new int[]{ position[0] - 1, position[1]},
+                new int[]{ position[0], position[1] - 1},
+                new int[]{ position[0] + 1, position[1]},
+                new int[]{ position[0], position[1] + 1}
+            };
+
+            return availablePositions.Where(index =>
+            {
+                int x = index[0];
+                int y = index[1];
+                return x >= 0 && y >= 0 && x < 9 && y < 9 && IsCellEmpty(x, y, state);
+            }).ToList();
         }
     }
 }
