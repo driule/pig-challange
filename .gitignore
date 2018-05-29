@@ -1,4 +1,6 @@
 /.vs
+/.idea
+/packages
 
 pig-challange/bin
 pig-challange/obj
