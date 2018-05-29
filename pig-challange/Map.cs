@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace pig_challange
+namespace pig_challenge
 {
     class Map
     {

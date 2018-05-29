@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pig-challange", "pig-challange\pig-challange.csproj", "{8E10700F-AB7D-4FF6-BC39-3AF3A829245A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pig-challenge", "pig-challange\pig-challenge.csproj", "{8E10700F-AB7D-4FF6-BC39-3AF3A829245A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

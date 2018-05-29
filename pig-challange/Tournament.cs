@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace pig_challange
+namespace pig_challenge
 {
     class Tournament
     {

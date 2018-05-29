@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace pig_challange
+namespace pig_challenge
 {
     abstract class BasicAgent
     {
