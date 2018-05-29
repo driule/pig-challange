@@ -51,6 +51,11 @@ namespace pig_challange
             this.Grid[3, 5] = CellType.Obstacle;
             this.Grid[5, 3] = CellType.Obstacle;
             this.Grid[5, 5] = CellType.Obstacle;
+
+            grid.BlockCell(new Position(3, 3));
+            grid.BlockCell(new Position(3, 5));
+            grid.BlockCell(new Position(5, 3));
+            grid.BlockCell(new Position(5, 5));
         }
 
         public bool IsCellExit(int x, int y)
@@ -147,6 +152,25 @@ namespace pig_challange
                 int y = index[1];
                 return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
             }).ToList();
+        }
+
+        public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
+        {
+            Position[] positions;
+            int[] agentPos, otherAgentPos, pigAgentPos;
+            agentPos = state.GetPosition(agentId);
+            otherAgentPos = state.GetPosition((BasicAgent.AgentIdentifier)(1 - (int)agentId));
+            pigAgentPos = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+
+            Position pos, otherPos, pigPos;
+            pos = new Position(agentPos[0], agentPos[1]);
+            otherPos = new Position(otherAgentPos[0], otherAgentPos[1]);
+            pigPos = new Position(pigAgentPos[0], pigAgentPos[1]);
+
+            grid.BlockCell(otherPos);
+            positions = grid.GetPath(pos, pigPos, MovementPatterns.LateralOnly);
+            grid.UnblockCell(otherPos);
+            return positions;
         }
     }
 }

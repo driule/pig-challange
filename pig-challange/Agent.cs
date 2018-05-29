@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RoyT.AStar;
 
 namespace pig_challange
 {
@@ -21,12 +22,21 @@ namespace pig_challange
             int[] position = state.GetPosition(this.Identifier);
 
             // determine all available adjacent positions
-            List<int[]> positions = map.GetAvailablePositions(position, state);
+            //List<int[]> positions = map.GetAvailablePositions(position, state);
 
             // get a random new position
-            int[] newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
+            //int[] newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
 
-            state.MoveAgent(this.Identifier, newPosition);
+
+            IList<Position> path = map.GetPathToPig(this.Identifier, state);
+            if (path.Count <= 2)
+            {
+                return;
+            }
+
+            int[] newPos = { path[1].X, path[1].Y };
+
+            state.MoveAgent(this.Identifier, newPos);
         }
     }
 }
