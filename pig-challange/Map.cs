@@ -46,6 +46,9 @@ namespace pig_challange
             this.Grid[1, 4] = CellType.Exit;
             this.Grid[7, 4] = CellType.Exit;
 
+            grid.UnblockCell(new Position(1, 4));
+            grid.UnblockCell(new Position(7, 4));
+
             // obstacles
             this.Grid[3, 3] = CellType.Obstacle;
             this.Grid[3, 5] = CellType.Obstacle;

@@ -26,8 +26,7 @@ namespace pig_challange
 
             // get a random new position
             //int[] newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
-
-
+            
             IList<Position> path = map.GetPathToPig(this.Identifier, state);
             if (path.Count <= 2)
             {
