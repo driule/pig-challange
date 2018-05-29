@@ -121,7 +121,7 @@ namespace pig_challenge
                 break;
             }
 
-            return new int[] { y, x };
+            return new int[] { x, y };
         }
 
         public void Draw(int iteration, State state)
