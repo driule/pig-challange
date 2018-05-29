@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8E10700F-AB7D-4FF6-BC39-3AF3A829245A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>pig_challange</RootNamespace>
-    <AssemblyName>pig-challange</AssemblyName>
+    <RootNamespace>pig_challenge</RootNamespace>
+    <AssemblyName>pig-challenge</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
