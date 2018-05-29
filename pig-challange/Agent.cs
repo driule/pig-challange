@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RoyT.AStar;
 
-namespace pig_challange
+namespace pig_challenge
 {
     class Agent : BasicAgent
     {

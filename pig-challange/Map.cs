@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RoyT.AStar;
 
-namespace pig_challange
+namespace pig_challenge
 {
     class Map
     {
@@ -20,6 +18,8 @@ namespace pig_challange
 
         // Create a new grid and let each cell have a default traversal cost of 1.0
         Grid grid = new Grid(9, 9, 1.0f);
+
+        private Random randomizer;
 
         public Map()
         {
@@ -59,6 +59,8 @@ namespace pig_challange
             grid.BlockCell(new Position(3, 5));
             grid.BlockCell(new Position(5, 3));
             grid.BlockCell(new Position(5, 5));
+
+            this.randomizer = new Random();
         }
 
         public bool IsCellExit(int x, int y)
@@ -98,6 +100,26 @@ namespace pig_challange
             }
 
             return true;
+        }
+
+        // unpredictable: find all suitable positions and randomly select one
+        public int[] GetRandomStartPosition(State state)
+        {
+            int x = 0, y = 0;
+            while (true)
+            {
+                x = this.randomizer.Next(2, 6);
+                y = this.randomizer.Next(2, 6);
+
+                if (!this.IsCellEmpty(x, y, state))
+                {
+                    continue;
+                }
+
+                break;
+            }
+
+            return new int[] { y, x };
         }
 
         public void Draw(int iteration, State state)

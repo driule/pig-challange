@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace pig_challange
+namespace pig_challenge
 {
     class State
     {
@@ -37,11 +33,11 @@ namespace pig_challange
             this.IsPigCapturable = true; //TODO
         }
 
-        public void PlaceAgents(int[] PositionAgentA, int[] PositionAgentB, int[] positionPig)
+        public void PlaceAgents(Map map)
         {
-            this.PositionAgentA = PositionAgentA;
-            this.PositionAgentB = PositionAgentB;
-            this.PositionPig = positionPig;
+            this.PositionAgentA = map.GetRandomStartPosition(this);
+            this.PositionAgentB = map.GetRandomStartPosition(this);
+            this.PositionPig = map.GetRandomStartPosition(this);
         }
 
         public void MoveAgent(BasicAgent.AgentIdentifier agentId, int[] location)
