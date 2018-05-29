@@ -156,25 +156,25 @@ namespace pig_challange
 
         public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
         {
-            Position[] positions;
-            int[] currentAgentPosition, agentPos, otherAgentPos, pigAgentPos;
-            currentAgentPosition = state.GetPosition(agentId); 
-            agentPos = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
-            otherAgentPos = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
-            pigAgentPos = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+            int[] currentAgentCoordinates = state.GetPosition(agentId); 
+            int[] agentACoordinates = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
+            int[] agentBCoordinates = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
+            int[] pigCoordinates = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
 
-            Position currentPos, pos, otherPos, pigPos;
-            currentPos = new Position(currentAgentPosition[0], currentAgentPosition[1]);
-            pos = new Position(agentPos[0], agentPos[1]);
-            otherPos = new Position(otherAgentPos[0], otherAgentPos[1]);
-            pigPos = new Position(pigAgentPos[0], pigAgentPos[1]);
+            Position currentAgentPosition = new Position(currentAgentCoordinates[0], currentAgentCoordinates[1]);
+            Position agentAPosition = new Position(agentACoordinates[0], agentACoordinates[1]);
+            Position agentBPosition = new Position(agentBCoordinates[0], agentBCoordinates[1]);
+            Position pigPosition = new Position(pigCoordinates[0], pigCoordinates[1]);
 
-            grid.BlockCell(pos);
-            grid.BlockCell(otherPos);
-            positions = grid.GetPath(currentPos, pigPos, MovementPatterns.LateralOnly);
-            grid.BlockCell(pos);
-            grid.UnblockCell(otherPos);
-            return positions;
+            grid.BlockCell(agentAPosition);
+            grid.BlockCell(agentBPosition);
+
+            Position[] path = grid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
+
+            grid.UnblockCell(agentAPosition);
+            grid.UnblockCell(agentBPosition);
+
+            return path;
         }
     }
 }
