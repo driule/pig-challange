@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RoyT.AStar;
 
 namespace pig_challange
 {
@@ -17,6 +18,9 @@ namespace pig_challange
 
         public CellType[,] Grid { get; }
 
+        // Create a new grid and let each cell have a default traversal cost of 1.0
+        Grid grid = new Grid(9, 9, 1.0f);
+
         public Map()
         {
             this.Grid = new CellType[9, 9];
@@ -27,6 +31,9 @@ namespace pig_challange
                     if (y == 0 || x == 0 || y == 8 || x == 8 || y == 1 || x == 1 || y == 7 || x == 7)
                     {
                         this.Grid[x, y] = CellType.Obstacle;
+
+                        // Block some cells (for example walls)
+                        grid.BlockCell(new Position(x, y));
                     }
                     else
                     {
