@@ -6,6 +6,7 @@ namespace pig_challenge
     {
         const int NUM_GAMES = 1;
         const int MAX_ITERATIONS = 25;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the pig challenge!");

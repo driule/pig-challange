@@ -8,30 +8,30 @@ namespace pig_challenge
         private List<int[]> scoreList;
         private int totalScoreAgentA;
         private int totalScoreAgentB;
-        private int NUM_GAMES;
-        private int MAX_ITERATIONS;
+        private int NumberOfGames;
+        private int MaxIterations;
 
-        public Tournament(int NUM_GAMES, int MAX_ITERATIONS)
+        public Tournament(int numberOfGames, int maxIterations)
         {
             scoreList = new List<int[]>();
             totalScoreAgentA = 0;
             totalScoreAgentB = 0;
 
-            this.NUM_GAMES = NUM_GAMES;
-            this.MAX_ITERATIONS = MAX_ITERATIONS;
+            this.NumberOfGames = numberOfGames;
+            this.MaxIterations = maxIterations;
         }
 
         public void Run()
         {
-            for (int i = 0; i < NUM_GAMES; i++)
+            for (int i = 0; i < this.NumberOfGames; i++)
             {
-                Game game = new Game(MAX_ITERATIONS);
+                Game game = new Game(this.MaxIterations);
                 State endState = game.Run();
                 scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
             }
 
             Console.WriteLine("Scores for the two agents:");
-            for (int i = 0; i < NUM_GAMES; i++)
+            for (int i = 0; i < this.NumberOfGames; i++)
             {
                 Console.WriteLine($" Agent A: {scoreList[i][0]}, Agent B: {scoreList[i][1]}");
                 totalScoreAgentA += scoreList[i][0];
