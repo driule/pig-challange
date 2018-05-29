@@ -157,18 +157,22 @@ namespace pig_challange
         public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
         {
             Position[] positions;
-            int[] agentPos, otherAgentPos, pigAgentPos;
-            agentPos = state.GetPosition(agentId);
-            otherAgentPos = state.GetPosition((BasicAgent.AgentIdentifier)(1 - (int)agentId));
+            int[] currentAgentPosition, agentPos, otherAgentPos, pigAgentPos;
+            currentAgentPosition = state.GetPosition(agentId); 
+            agentPos = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
+            otherAgentPos = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
             pigAgentPos = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
 
-            Position pos, otherPos, pigPos;
+            Position currentPos, pos, otherPos, pigPos;
+            currentPos = new Position(currentAgentPosition[0], currentAgentPosition[1]);
             pos = new Position(agentPos[0], agentPos[1]);
             otherPos = new Position(otherAgentPos[0], otherAgentPos[1]);
             pigPos = new Position(pigAgentPos[0], pigAgentPos[1]);
 
+            grid.BlockCell(pos);
             grid.BlockCell(otherPos);
-            positions = grid.GetPath(pos, pigPos, MovementPatterns.LateralOnly);
+            positions = grid.GetPath(currentPos, pigPos, MovementPatterns.LateralOnly);
+            grid.BlockCell(pos);
             grid.UnblockCell(otherPos);
             return positions;
         }
