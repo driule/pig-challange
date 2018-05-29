@@ -44,12 +44,12 @@ namespace pig_challange
             this.PositionPig = positionPig;
         }
 
-        public void MoveAgent(Agent.AgentIdentifier agentId, int[] location)
+        public void MoveAgent(BasicAgent.AgentIdentifier agentId, int[] location)
         {
             switch (agentId)
             {
-                case Agent.AgentIdentifier.AgentA: { this.MoveAgentA(location); break; }
-                case Agent.AgentIdentifier.AgentB: { this.MoveAgentB(location); break; }
+                case BasicAgent.AgentIdentifier.AgentA: { this.MoveAgentA(location); break; }
+                case BasicAgent.AgentIdentifier.AgentB: { this.MoveAgentB(location); break; }
                 default: { this.MovePig(location); break; }
             }
         }
@@ -96,11 +96,11 @@ namespace pig_challange
             this.ExitCode = Game.ExitCodes.IterationsExceeded;
         }
 
-        public int[] GetPosition(Agent.AgentIdentifier identifier)
+        public int[] GetPosition(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier) {
-                case Agent.AgentIdentifier.AgentA: return this.PositionAgentA;
-                case Agent.AgentIdentifier.AgentB: return this.PositionAgentB;
+                case BasicAgent.AgentIdentifier.AgentA: return this.PositionAgentA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.PositionAgentB;
                 default: return this.PositionPig;
             }
         }
