@@ -17,13 +17,15 @@ namespace pig_challenge
         public CellType[,] Grid { get; }
 
         // Create a new grid and let each cell have a default traversal cost of 1.0
-        Grid grid = new Grid(9, 9, 1.0f);
+        private Grid AStarGrid;
 
         private Random randomizer;
 
         public Map()
         {
             this.Grid = new CellType[9, 9];
+            this.AStarGrid = new Grid(9, 9, 1.0f);
+
             for (int y = 0; y < 9; y++)
             {
                 for (int x = 0; x < 9; x++)
@@ -33,7 +35,7 @@ namespace pig_challenge
                         this.Grid[x, y] = CellType.Obstacle;
 
                         // Block some cells (for example walls)
-                        grid.BlockCell(new Position(x, y));
+                        this.AStarGrid.BlockCell(new Position(x, y));
                     }
                     else
                     {
@@ -46,8 +48,8 @@ namespace pig_challenge
             this.Grid[1, 4] = CellType.Exit;
             this.Grid[7, 4] = CellType.Exit;
 
-            grid.UnblockCell(new Position(1, 4));
-            grid.UnblockCell(new Position(7, 4));
+            this.AStarGrid.UnblockCell(new Position(1, 4));
+            this.AStarGrid.UnblockCell(new Position(7, 4));
 
             // obstacles
             this.Grid[3, 3] = CellType.Obstacle;
@@ -55,10 +57,10 @@ namespace pig_challenge
             this.Grid[5, 3] = CellType.Obstacle;
             this.Grid[5, 5] = CellType.Obstacle;
 
-            grid.BlockCell(new Position(3, 3));
-            grid.BlockCell(new Position(3, 5));
-            grid.BlockCell(new Position(5, 3));
-            grid.BlockCell(new Position(5, 5));
+            this.AStarGrid.BlockCell(new Position(3, 3));
+            this.AStarGrid.BlockCell(new Position(3, 5));
+            this.AStarGrid.BlockCell(new Position(5, 3));
+            this.AStarGrid.BlockCell(new Position(5, 5));
 
             this.randomizer = new Random();
         }
@@ -191,13 +193,13 @@ namespace pig_challenge
             Position agentBPosition = new Position(agentBCoordinates[0], agentBCoordinates[1]);
             Position pigPosition = new Position(pigCoordinates[0], pigCoordinates[1]);
 
-            grid.BlockCell(agentAPosition);
-            grid.BlockCell(agentBPosition);
+            this.AStarGrid.BlockCell(agentAPosition);
+            this.AStarGrid.BlockCell(agentBPosition);
 
-            Position[] path = grid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
+            Position[] path = this.AStarGrid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
 
-            grid.UnblockCell(agentAPosition);
-            grid.UnblockCell(agentBPosition);
+            this.AStarGrid.UnblockCell(agentAPosition);
+            this.AStarGrid.UnblockCell(agentBPosition);
 
             return path;
         }
