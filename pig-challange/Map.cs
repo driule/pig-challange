@@ -59,6 +59,7 @@ namespace pig_challange
         public bool IsCellEmpty(int x, int y, State state)
         {
             int[] position = new int[] { x, y };
+
             // check for obstacles
             if (this.Grid[position[0], position[1]] == CellType.Obstacle)
             {
@@ -66,12 +67,12 @@ namespace pig_challange
             }
 
             // check for agents and pig
-            if (state.PositionA.SequenceEqual(position))
+            if (state.PositionAgentA.SequenceEqual(position))
             {
                 return false;
             }
 
-            if (state.PositionB.SequenceEqual(position))
+            if (state.PositionAgentB.SequenceEqual(position))
             {
                 return false;
             }
@@ -93,11 +94,11 @@ namespace pig_challange
                 for (int x = 0; x < 9; x++)
                 {
                     int[] position = new int[] { x, y };
-                    if (state.PositionA.SequenceEqual(position))
+                    if (state.PositionAgentA.SequenceEqual(position))
                     {
                         Console.Write("A");
                     }
-                    else if (state.PositionB.SequenceEqual(position))
+                    else if (state.PositionAgentB.SequenceEqual(position))
                     {
                         Console.Write("B");
                     }
@@ -118,12 +119,12 @@ namespace pig_challange
                 Console.WriteLine();
             }
             Console.WriteLine();
-            state.Print();
+            //state.Print();
         }
 
-        //Returns a list of all available positions in the agent's vacinity
-        //TODO possible just use a deterministic list of available positions (there are few in total)
-        public List<int[]> AvailablePositions(int[] position, State state)
+        // returns a list of all available positions in the agent's vacinity
+        // TODO: possible just use a deterministic list of available positions (there are few in total)
+        public List<int[]> GetAvailablePositions(int[] position, State state)
         {
             List<int[]> availablePositions = new List<int[]>
             {
@@ -137,7 +138,7 @@ namespace pig_challange
             {
                 int x = index[0];
                 int y = index[1];
-                return x >= 0 && y >= 0 && x < 9 && y < 9 && IsCellEmpty(x, y, state);
+                return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
             }).ToList();
         }
     }

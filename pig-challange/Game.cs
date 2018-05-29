@@ -10,7 +10,6 @@ namespace pig_challange
     {
         private int MAX_ITERATIONS;
         private State state;
-
         
         public enum ExitCodes
         {
@@ -32,35 +31,45 @@ namespace pig_challange
             this.randomizer = new Random();
             this.MAX_ITERATIONS = MAX_ITERATIONS;
 
-            this.agentA = new Agent(0); 
-            this.agentB = new Agent(1);
+            this.agentA = new Agent(BasicAgent.AgentIdentifier.AgentA); 
+            this.agentB = new Agent(BasicAgent.AgentIdentifier.AgentB);
             this.pig = new Pig();
             this.map = new Map();
 
             this.state = new State(MAX_ITERATIONS);
             state.PlaceAgents(this.GetRandomStartPosition(), this.GetRandomStartPosition(), this.GetRandomStartPosition());
-            
         }
 
-        public State RunGame()
+        public State Run()
         {
-            this.map.Draw(-1, this.state);
             for (int i = 0; i < MAX_ITERATIONS; i++)
             {
                 this.agentA.DetermineStep(this.map, this.state);
                 this.EvaluateGameState();
-                if(this.state.ExitCode > -1)
+                if (this.state.ExitCode != Game.ExitCodes.InProgress)
+                {
+                    this.map.Draw(i + 1, this.state);
+
                     return this.state;
+                }
 
                 this.agentB.DetermineStep(this.map, this.state);
                 this.EvaluateGameState();
-                if (this.state.ExitCode > -1)
+                if (this.state.ExitCode != Game.ExitCodes.InProgress)
+                {
+                    this.map.Draw(i + 1, this.state);
+
                     return this.state;
+                }
 
                 this.pig.DetermineStep(this.map, this.state);
                 this.EvaluateGameState();
-                if (this.state.ExitCode > -1)
+                if (this.state.ExitCode != Game.ExitCodes.InProgress)
+                {
+                    this.map.Draw(i + 1, this.state);
+
                     return this.state;
+                }
 
                 this.map.Draw(i + 1, this.state);
                 Console.ReadLine();
@@ -69,35 +78,34 @@ namespace pig_challange
             throw new Exception("the game end check didn't fire successfully");
         }
 
-        //Adjust the gamestate according to evaluation
         private void EvaluateGameState()
         {
-            //Player A has won
-            if (this.map.IsCellExit(this.state.PositionA[0], this.state.PositionA[1]))
+            // agent A has won
+            if (this.map.IsCellExit(this.state.PositionAgentA[0], this.state.PositionAgentA[1]))
             {
                 this.state.SetWinnerA();
             }
 
-            //Player B has won
-            if (this.map.IsCellExit(this.state.PositionB[0], this.state.PositionB[1]))
+            // agent B has won
+            if (this.map.IsCellExit(this.state.PositionAgentB[0], this.state.PositionAgentB[1]))
             {
                 this.state.SetWinnerB();
             }
 
-            //The pig was caught, i.e. the pig has no adjacent squares that it can move to
-            if (this.map.AvailablePositions(this.state.PositionPig, state).Count() == 0)
+            // the pig was caught, i.e. the pig has no adjacent squares that it can move to
+            if (this.map.GetAvailablePositions(this.state.PositionPig, state).Count() == 0)
             {
                 this.state.SetWinnerBoth();
             }
 
-            //The turns ran out
-            if (this.state.Turns == 0)
+            // the turns ran out
+            if (this.state.TurnsLeft == 0)
             {
                 this.state.SetOutOfTurns();
             }
         }
 
-        //unpredictable: find all suitable positions and randomly select one
+        // unpredictable: find all suitable positions and randomly select one
         private int[] GetRandomStartPosition()
         {
             int x = 0, y = 0;
@@ -106,7 +114,7 @@ namespace pig_challange
                 x = this.randomizer.Next(2, 6);
                 y = this.randomizer.Next(2, 6);
 
-                if (!this.map.IsCellEmpty(y, x,this.state))
+                if (!this.map.IsCellEmpty(y, x, this.state))
                 {
                     continue;
                 }

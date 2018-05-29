@@ -8,7 +8,13 @@ namespace pig_challange
 {
     abstract class BasicAgent
     {
-        public Tuple<int, int> Position { get; set; }
+        public enum AgentIdentifier
+        {
+            AgentA = 0,
+            AgentB = 1,
+            Pig = 2
+        }
+
         protected Random randomizer;
 
         abstract public void DetermineStep(Map map, State state);
