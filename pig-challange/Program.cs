@@ -15,8 +15,8 @@ namespace pig_challange
             Console.WriteLine("Welcome to the pig challange!");
             Console.WriteLine("Press Enter to start a new tournament.");
 
-            Tournament tour = new Tournament(NUM_GAMES, MAX_ITERATIONS);
-            tour.RunTournament();
+            Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
+            tournament.Run();
         }
     }
 }

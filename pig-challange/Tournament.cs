@@ -24,13 +24,13 @@ namespace pig_challange
             this.MAX_ITERATIONS = MAX_ITERATIONS;
         }
 
-        public void RunTournament()
+        public void Run()
         {
             for (int i = 0; i < NUM_GAMES; i++)
             {
                 Game game = new Game(MAX_ITERATIONS);
-                State endState = game.RunGame();
-                scoreList.Add(new int[] { endState.scoreA, endState.scoreB });
+                State endState = game.Run();
+                scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
             }
 
             Console.WriteLine("Scores for the two agents:");

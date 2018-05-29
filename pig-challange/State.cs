@@ -8,114 +8,112 @@ namespace pig_challange
 {
     class State
     {
-        public int ExitCode;
-        public int[] PositionA;
-        public int[] PositionB;
+        public Game.ExitCodes ExitCode;
+        public int[] PositionAgentA;
+        public int[] PositionAgentB;
         public int[] PositionPig;
-        public int scoreA;
-        public int scoreB;
-        public int Turns;
+        public int ScoreAgentA;
+        public int ScoreAgentB;
+        public int TurnsLeft;
         public bool IsPigCapturable;
         private int maxTurns;
 
-        public State(int turns)
+        public State(int maxTurns)
         {
-            //Initially set positions to 0,0
-            //The positions will be changed after PlaceAgents was called
-            //These positions are only used as a placeholder for the IsCellFree method
-            this.PositionA = new int[] { 0, 0 };
-            this.PositionB = new int[] { 0, 0 };
+            // initially set positions to 0,0
+            // the positions will be changed after PlaceAgents was called
+            // these positions are only used as a placeholder for the IsCellFree method
+            this.PositionAgentA = new int[] { 0, 0 };
+            this.PositionAgentB = new int[] { 0, 0 };
             this.PositionPig = new int[] { 0, 0 };
 
-            this.scoreA = turns;
-            this.scoreB = turns;
-            this.Turns = turns;
-            this.maxTurns = turns;
+            this.ScoreAgentA = maxTurns;
+            this.ScoreAgentB = maxTurns;
+            this.TurnsLeft = maxTurns;
+            this.maxTurns = maxTurns;
 
-            this.ExitCode = -1; //-1 = none, 0 = A won, 1 = B won, 2 = Both won, 3 both lost
+            this.ExitCode = Game.ExitCodes.InProgress;
 
             this.IsPigCapturable = true; //TODO
         }
 
-        public void PlaceAgents(int[] positionA, int[] positionB, int[] positionPig)
+        public void PlaceAgents(int[] PositionAgentA, int[] PositionAgentB, int[] positionPig)
         {
-            this.PositionA = positionA;
-            this.PositionB = positionB;
+            this.PositionAgentA = PositionAgentA;
+            this.PositionAgentB = PositionAgentB;
             this.PositionPig = positionPig;
         }
 
-        //Performs movement for agent.
-        public void move(int agent, int[] location)
+        public void MoveAgent(BasicAgent.AgentIdentifier agentId, int[] location)
         {
-            switch (agent)
+            switch (agentId)
             {
-                case 0: { this.moveA(location); break; }
-                case 1: { this.moveB(location); break; }
-                default: { this.movePig(location); break; }
+                case BasicAgent.AgentIdentifier.AgentA: { this.MoveAgentA(location); break; }
+                case BasicAgent.AgentIdentifier.AgentB: { this.MoveAgentB(location); break; }
+                default: { this.MovePig(location); break; }
             }
         }
 
-        private void moveA(int[] location)
+        private void MoveAgentA(int[] location)
         {
-            this.PositionA = location;
-            this.scoreA--;
+            this.PositionAgentA = location;
+            this.ScoreAgentA--;
         }
 
-        private void moveB(int[] location)
+        private void MoveAgentB(int[] location)
         {
-            this.PositionB = location;
-            this.scoreB--;
+            this.PositionAgentB = location;
+            this.ScoreAgentB--;
         }
 
-        private void movePig(int[] location)
+        private void MovePig(int[] location)
         {
             this.PositionPig = location;
-            this.Turns--;
+            this.TurnsLeft--;
         }
 
         public void SetWinnerA()
         {
-            this.ExitCode = 0;
-            this.scoreA += 5;
+            this.ExitCode = Game.ExitCodes.AgentAQuit;
+            this.ScoreAgentA += 5;
         }
 
         public void SetWinnerB()
         {
-            this.ExitCode = 1;
-            this.scoreB += 5;
+            this.ExitCode = Game.ExitCodes.AgentBQuit;
+            this.ScoreAgentB += 5;
         }
 
         public void SetWinnerBoth()
         {
-            this.ExitCode = 2;
-            this.scoreA += 25;
-            this.scoreB += 25;
+            this.ExitCode = Game.ExitCodes.PigCaught;
+            this.ScoreAgentA += 25;
+            this.ScoreAgentB += 25;
         }
 
         public void SetOutOfTurns()
         {
-            this.ExitCode = 3;
+            this.ExitCode = Game.ExitCodes.IterationsExceeded;
         }
 
-        public int[] GetPosition(int identifier)
+        public int[] GetPosition(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier) {
-                case 0: return this.PositionA;
-                case 1: return this.PositionB;
+                case BasicAgent.AgentIdentifier.AgentA: return this.PositionAgentA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.PositionAgentB;
                 default: return this.PositionPig;
             }
         }
 
-        //TEST
         public void Print()
         {
             Console.WriteLine("ExitCode: " + ExitCode);
-            Console.WriteLine("PositionA: " + PositionA[0] + ","+ PositionA[1]);
-            Console.WriteLine("PositionB: " + PositionB[0] + "," + PositionB[1]);
+            Console.WriteLine("PositionAgentA: " + PositionAgentA[0] + ","+ PositionAgentA[1]);
+            Console.WriteLine("PositionAgentB: " + PositionAgentB[0] + "," + PositionAgentB[1]);
             Console.WriteLine("PositionPig: " + PositionPig[0] + "," + PositionPig[1]);
-            Console.WriteLine("scoreA: " + scoreA);
-            Console.WriteLine("scoreB: " + scoreB);
-            Console.WriteLine("Turns: " + Turns);
+            Console.WriteLine("ScoreAgentA: " + ScoreAgentA);
+            Console.WriteLine("ScoreAgentB: " + ScoreAgentB);
+            Console.WriteLine("TurnsLeft: " + TurnsLeft);
             Console.WriteLine("IsPigCapturable: " + IsPigCapturable);
             Console.WriteLine("maxTurns: " + maxTurns);
         }
