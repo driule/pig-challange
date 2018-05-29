@@ -19,6 +19,15 @@ namespace pig_challenge
             // determine all available adjacent positions
             List<Position> positions = map.GetAvailablePositions(position, state);
 
+            foreach(var pos in positions)
+            {
+                if (map.IsCellExit(pos[0], pos[1]))
+                {
+                    positions.Remove(pos);
+                    break;
+                }
+            }
+
             // get a random new position
             Position newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
 
