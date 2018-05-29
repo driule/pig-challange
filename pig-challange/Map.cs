@@ -14,6 +14,7 @@ namespace pig_challenge
         }
 
         public CellType[,] Grid { get; }
+        private Random randomizer;
 
         public Map()
         {
@@ -42,6 +43,8 @@ namespace pig_challenge
             this.Grid[3, 5] = CellType.Obstacle;
             this.Grid[5, 3] = CellType.Obstacle;
             this.Grid[5, 5] = CellType.Obstacle;
+
+            this.randomizer = new Random();
         }
 
         public bool IsCellExit(int x, int y)
@@ -81,6 +84,26 @@ namespace pig_challenge
             }
 
             return true;
+        }
+
+        // unpredictable: find all suitable positions and randomly select one
+        public int[] GetRandomStartPosition(State state)
+        {
+            int x = 0, y = 0;
+            while (true)
+            {
+                x = this.randomizer.Next(2, 6);
+                y = this.randomizer.Next(2, 6);
+
+                if (!this.IsCellEmpty(x, y, state))
+                {
+                    continue;
+                }
+
+                break;
+            }
+
+            return new int[] { y, x };
         }
 
         public void Draw(int iteration, State state)

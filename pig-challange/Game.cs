@@ -5,7 +5,7 @@ namespace pig_challenge
 {
     class Game
     {
-        private int MAX_ITERATIONS;
+        private int MaxIterations;
         private State state;
         
         public enum ExitCodes
@@ -20,26 +20,23 @@ namespace pig_challenge
         private Agent agentA, agentB;
         private Pig pig;
         private Map map;
-
-        private Random randomizer;
         
-        public Game(int MAX_ITERATIONS)
+        public Game(int maxIterations)
         {
-            this.randomizer = new Random();
-            this.MAX_ITERATIONS = MAX_ITERATIONS;
+            this.MaxIterations = maxIterations;
 
             this.agentA = new Agent(BasicAgent.AgentIdentifier.AgentA); 
             this.agentB = new Agent(BasicAgent.AgentIdentifier.AgentB);
             this.pig = new Pig();
             this.map = new Map();
 
-            this.state = new State(MAX_ITERATIONS);
-            state.PlaceAgents(this.GetRandomStartPosition(), this.GetRandomStartPosition(), this.GetRandomStartPosition());
+            this.state = new State(this.MaxIterations);
+            state.PlaceAgents(this.map);
         }
 
         public State Run()
         {
-            for (int i = 0; i < MAX_ITERATIONS; i++)
+            for (int i = 0; i < this.MaxIterations; i++)
             {
                 this.agentA.DetermineStep(this.map, this.state);
                 this.EvaluateGameState();
@@ -100,26 +97,6 @@ namespace pig_challenge
             {
                 this.state.SetOutOfTurns();
             }
-        }
-
-        // unpredictable: find all suitable positions and randomly select one
-        private int[] GetRandomStartPosition()
-        {
-            int x = 0, y = 0;
-            while (true)
-            {
-                x = this.randomizer.Next(2, 6);
-                y = this.randomizer.Next(2, 6);
-
-                if (!this.map.IsCellEmpty(y, x, this.state))
-                {
-                    continue;
-                }
-
-                break;
-            }
-
-            return new int[] { y, x };
         }
     }
 }

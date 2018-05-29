@@ -13,9 +13,9 @@ namespace pig_challenge
 
         public Tournament(int numberOfGames, int maxIterations)
         {
-            scoreList = new List<int[]>();
-            totalScoreAgentA = 0;
-            totalScoreAgentB = 0;
+            this.scoreList = new List<int[]>();
+            this.totalScoreAgentA = 0;
+            this.totalScoreAgentB = 0;
 
             this.NumberOfGames = numberOfGames;
             this.MaxIterations = maxIterations;
@@ -27,17 +27,17 @@ namespace pig_challenge
             {
                 Game game = new Game(this.MaxIterations);
                 State endState = game.Run();
-                scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
+                this.scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
             }
 
             Console.WriteLine("Scores for the two agents:");
             for (int i = 0; i < this.NumberOfGames; i++)
             {
-                Console.WriteLine($" Agent A: {scoreList[i][0]}, Agent B: {scoreList[i][1]}");
-                totalScoreAgentA += scoreList[i][0];
-                totalScoreAgentB += scoreList[i][1];
+                Console.WriteLine($" Agent A: {this.scoreList[i][0]}, Agent B: {this.scoreList[i][1]}");
+                this.totalScoreAgentA += this.scoreList[i][0];
+                this.totalScoreAgentB += this.scoreList[i][1];
             }
-            Console.WriteLine($"Total scores: \n Agent A: {totalScoreAgentA}, Agent B: {totalScoreAgentB}");
+            Console.WriteLine($"Total scores: \n Agent A: {this.totalScoreAgentA}, Agent B: {this.totalScoreAgentB}");
 
             Console.ReadLine();
         }
