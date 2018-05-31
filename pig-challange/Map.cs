@@ -15,13 +15,13 @@ namespace pig_challenge
         }
 
         // Create a new grid and let each cell have a default traversal cost of 1.0
-        private Grid AStarGrid;
+        private Grid grid;
 
         private Random randomizer;
 
         public Map()
         {
-            this.AStarGrid = new Grid(9, 9, 1.0f);
+            this.grid = new Grid(9, 9, 1.0f);
 
             for (int y = 0; y < 9; y++)
             {
@@ -30,20 +30,20 @@ namespace pig_challenge
                     if (y == 0 || x == 0 || y == 8 || x == 8 || y == 1 || x == 1 || y == 7 || x == 7)
                     {
                         // Block some cells (for example walls)
-                        this.AStarGrid.BlockCell(new Position(x, y));
+                        this.grid.BlockCell(new Position(x, y));
                     }
                 }
             }
 
             // exits
-            this.AStarGrid.UnblockCell(new Position(1, 4));
-            this.AStarGrid.UnblockCell(new Position(7, 4));
+            this.grid.UnblockCell(new Position(1, 4));
+            this.grid.UnblockCell(new Position(7, 4));
 
             // obstacles
-            this.AStarGrid.BlockCell(new Position(3, 3));
-            this.AStarGrid.BlockCell(new Position(3, 5));
-            this.AStarGrid.BlockCell(new Position(5, 3));
-            this.AStarGrid.BlockCell(new Position(5, 5));
+            this.grid.BlockCell(new Position(3, 3));
+            this.grid.BlockCell(new Position(3, 5));
+            this.grid.BlockCell(new Position(5, 3));
+            this.grid.BlockCell(new Position(5, 5));
 
             this.randomizer = new Random();
         }
@@ -63,7 +63,7 @@ namespace pig_challenge
             Position position = new Position(x, y);
 
             // check for obstacles
-            if (float.IsInfinity(this.AStarGrid.GetCellCost(position))) // ==  this.Grid[position[0], position[1]] == CellType.Obstacle)
+            if (float.IsInfinity(this.grid.GetCellCost(position))) // ==  this.Grid[position[0], position[1]] == CellType.Obstacle)
             {
                 return false;
             }
@@ -128,7 +128,7 @@ namespace pig_challenge
                     {
                         Console.Write("o");
                     }
-                    else if (!float.IsInfinity(this.AStarGrid.GetCellCost(position)))
+                    else if (!float.IsInfinity(this.grid.GetCellCost(position)))
                     {
                         Console.Write(" ");
                     }
@@ -171,13 +171,13 @@ namespace pig_challenge
             Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
             Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
 
-            this.AStarGrid.BlockCell(agentAPosition);
-            this.AStarGrid.BlockCell(agentBPosition);
+            this.grid.BlockCell(agentAPosition);
+            this.grid.BlockCell(agentBPosition);
 
-            Position[] path = this.AStarGrid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
+            Position[] path = this.grid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
 
-            this.AStarGrid.UnblockCell(agentAPosition);
-            this.AStarGrid.UnblockCell(agentBPosition);
+            this.grid.UnblockCell(agentAPosition);
+            this.grid.UnblockCell(agentBPosition);
 
             return path;
         }
