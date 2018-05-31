@@ -19,18 +19,9 @@ namespace pig_challenge
             // determine all available adjacent positions
             List<Position> positions = map.GetAvailablePositions(position, state);
 
-            foreach(var pos in positions)
+            foreach(Position pos in positions)
             {
                 if (map.IsCellExit(pos.X, pos.Y))
-                {
-                    positions.Remove(pos);
-                    break;
-                }
-            }
-
-            foreach(var pos in positions)
-            {
-                if (map.IsCellExit(pos[0], pos[1]))
                 {
                     positions.Remove(pos);
                     break;
