@@ -181,5 +181,23 @@ namespace pig_challenge
 
             return path;
         }
+
+        public IList<Position> GetPathToPigFromPosition(BasicAgent.AgentIdentifier agentId, State state, Position position)
+        {
+            Position currentAgentPosition = state.GetPosition(agentId);
+            Position agentAPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
+            Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
+            Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+
+            this.grid.BlockCell(agentAPosition);
+            this.grid.BlockCell(agentBPosition);
+
+            Position[] path = this.grid.GetPath(position, pigPosition, MovementPatterns.LateralOnly);
+
+            this.grid.UnblockCell(agentAPosition);
+            this.grid.UnblockCell(agentBPosition);
+
+            return path;
+        }
     }
 }

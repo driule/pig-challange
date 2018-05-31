@@ -36,6 +36,7 @@ namespace pig_challenge
 
         public State Run()
         {
+            this.map.Draw(0, this.state);
             for (int i = 0; i < this.MaxIterations; i++)
             {
                 this.agentA.DetermineStep(this.map, this.state);
