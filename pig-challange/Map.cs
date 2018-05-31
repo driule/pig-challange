@@ -14,17 +14,14 @@ namespace pig_challenge
             Exit = 2
         }
 
-        public CellType[,] Grid { get; }
-
         // Create a new grid and let each cell have a default traversal cost of 1.0
-        private Grid AStarGrid;
+        private Grid grid;
 
         private Random randomizer;
 
         public Map()
         {
-            this.Grid = new CellType[9, 9];
-            this.AStarGrid = new Grid(9, 9, 1.0f);
+            this.grid = new Grid(9, 9, 1.0f);
 
             for (int y = 0; y < 9; y++)
             {
@@ -32,42 +29,28 @@ namespace pig_challenge
                 {
                     if (y == 0 || x == 0 || y == 8 || x == 8 || y == 1 || x == 1 || y == 7 || x == 7)
                     {
-                        this.Grid[x, y] = CellType.Obstacle;
-
                         // Block some cells (for example walls)
-                        this.AStarGrid.BlockCell(new Position(x, y));
-                    }
-                    else
-                    {
-                        this.Grid[x, y] = CellType.Empty;
+                        this.grid.BlockCell(new Position(x, y));
                     }
                 }
             }
 
             // exits
-            this.Grid[1, 4] = CellType.Exit;
-            this.Grid[7, 4] = CellType.Exit;
-
-            this.AStarGrid.UnblockCell(new Position(1, 4));
-            this.AStarGrid.UnblockCell(new Position(7, 4));
+            this.grid.UnblockCell(new Position(1, 4));
+            this.grid.UnblockCell(new Position(7, 4));
 
             // obstacles
-            this.Grid[3, 3] = CellType.Obstacle;
-            this.Grid[3, 5] = CellType.Obstacle;
-            this.Grid[5, 3] = CellType.Obstacle;
-            this.Grid[5, 5] = CellType.Obstacle;
-
-            this.AStarGrid.BlockCell(new Position(3, 3));
-            this.AStarGrid.BlockCell(new Position(3, 5));
-            this.AStarGrid.BlockCell(new Position(5, 3));
-            this.AStarGrid.BlockCell(new Position(5, 5));
+            this.grid.BlockCell(new Position(3, 3));
+            this.grid.BlockCell(new Position(3, 5));
+            this.grid.BlockCell(new Position(5, 3));
+            this.grid.BlockCell(new Position(5, 5));
 
             this.randomizer = new Random();
         }
 
         public bool IsCellExit(int x, int y)
         {
-            if (this.Grid[x, y] == CellType.Exit)
+            if((x == 1 && y == 4) || (x == 7 && y == 4))
             {
                 return true;
             }
@@ -77,26 +60,26 @@ namespace pig_challenge
 
         public bool IsCellEmpty(int x, int y, State state)
         {
-            int[] position = new int[] { x, y };
+            Position position = new Position(x, y);
 
             // check for obstacles
-            if (this.Grid[position[0], position[1]] == CellType.Obstacle)
+            if (float.IsInfinity(this.grid.GetCellCost(position))) // ==  this.Grid[position[0], position[1]] == CellType.Obstacle)
             {
                 return false;
             }
 
             // check for agents and pig
-            if (state.PositionAgentA.SequenceEqual(position))
+            if (state.PositionAgentA.Equals(position))
             {
                 return false;
             }
 
-            if (state.PositionAgentB.SequenceEqual(position))
+            if (state.PositionAgentB.Equals(position))
             {
                 return false;
             }
 
-            if (state.PositionPig.SequenceEqual(position))
+            if (state.PositionPig.Equals(position))
             {
                 return false;
             }
@@ -105,7 +88,7 @@ namespace pig_challenge
         }
 
         // unpredictable: find all suitable positions and randomly select one
-        public int[] GetRandomStartPosition(State state)
+        public Position GetRandomStartPosition(State state)
         {
             int x = 0, y = 0;
             while (true)
@@ -121,7 +104,7 @@ namespace pig_challenge
                 break;
             }
 
-            return new int[] { x, y };
+            return new Position( x, y );
         }
 
         public void Draw(int iteration, State state)
@@ -132,24 +115,24 @@ namespace pig_challenge
                 Console.Write("|");
                 for (int x = 0; x < 9; x++)
                 {
-                    int[] position = new int[] { x, y };
-                    if (state.PositionAgentA.SequenceEqual(position))
+                    Position position = new Position(x, y);
+                    if (state.PositionAgentA.Equals(position))
                     {
                         Console.Write("A");
                     }
-                    else if (state.PositionAgentB.SequenceEqual(position))
+                    else if (state.PositionAgentB.Equals(position))
                     {
                         Console.Write("B");
                     }
-                    else if (state.PositionPig.SequenceEqual(position))
+                    else if (state.PositionPig.Equals(position))
                     {
                         Console.Write("o");
                     }
-                    else if (this.Grid[x, y] == CellType.Empty || this.Grid[x, y] == CellType.Exit)
+                    else if (!float.IsInfinity(this.grid.GetCellCost(position)))
                     {
                         Console.Write(" ");
                     }
-                    else if (this.Grid[x, y] == CellType.Obstacle)
+                    else
                     {
                         Console.Write("X");
                     }
@@ -163,43 +146,38 @@ namespace pig_challenge
 
         // returns a list of all available positions in the agent's vacinity
         // TODO: possible just use a deterministic list of available positions (there are few in total)
-        public List<int[]> GetAvailablePositions(int[] position, State state)
+        public List<Position> GetAvailablePositions(Position position, State state)
         {
-            List<int[]> availablePositions = new List<int[]>
+            List<Position> availablePositions = new List<Position>
             {
-                new int[]{ position[0] - 1, position[1]},
-                new int[]{ position[0], position[1] - 1},
-                new int[]{ position[0] + 1, position[1]},
-                new int[]{ position[0], position[1] + 1}
+                new Position( position.X - 1, position.Y),
+                new Position( position.X, position.Y - 1),
+                new Position( position.X + 1, position.Y),
+                new Position( position.X, position.Y + 1)
             };
 
-            return availablePositions.Where(index =>
+            return availablePositions.Where(pos =>
             {
-                int x = index[0];
-                int y = index[1];
+                int x = pos.X;
+                int y = pos.Y;
                 return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
             }).ToList();
         }
 
         public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
         {
-            int[] currentAgentCoordinates = state.GetPosition(agentId); 
-            int[] agentACoordinates = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
-            int[] agentBCoordinates = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
-            int[] pigCoordinates = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+            Position currentAgentPosition = state.GetPosition(agentId); 
+            Position agentAPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
+            Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
+            Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
 
-            Position currentAgentPosition = new Position(currentAgentCoordinates[0], currentAgentCoordinates[1]);
-            Position agentAPosition = new Position(agentACoordinates[0], agentACoordinates[1]);
-            Position agentBPosition = new Position(agentBCoordinates[0], agentBCoordinates[1]);
-            Position pigPosition = new Position(pigCoordinates[0], pigCoordinates[1]);
+            this.grid.BlockCell(agentAPosition);
+            this.grid.BlockCell(agentBPosition);
 
-            this.AStarGrid.BlockCell(agentAPosition);
-            this.AStarGrid.BlockCell(agentBPosition);
+            Position[] path = this.grid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
 
-            Position[] path = this.AStarGrid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
-
-            this.AStarGrid.UnblockCell(agentAPosition);
-            this.AStarGrid.UnblockCell(agentBPosition);
+            this.grid.UnblockCell(agentAPosition);
+            this.grid.UnblockCell(agentBPosition);
 
             return path;
         }

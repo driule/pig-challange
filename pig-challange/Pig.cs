@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RoyT.AStar;
 
 namespace pig_challenge
 {
@@ -13,10 +14,19 @@ namespace pig_challenge
 
         public override void DetermineStep(Map map, State state)
         {
-            int[] position = state.GetPosition(AgentIdentifier.Pig);
+            Position position = state.GetPosition(AgentIdentifier.Pig);
 
             // determine all available adjacent positions
-            List<int[]> positions = map.GetAvailablePositions(position, state);
+            List<Position> positions = map.GetAvailablePositions(position, state);
+
+            foreach(var pos in positions)
+            {
+                if (map.IsCellExit(pos.X, pos.Y))
+                {
+                    positions.Remove(pos);
+                    break;
+                }
+            }
 
             foreach(var pos in positions)
             {
@@ -28,7 +38,7 @@ namespace pig_challenge
             }
 
             // get a random new position
-            int[] newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
+            Position newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
 
             // analyse the gamestate and board to determine if the pig is capturable form its new position
             this.DetermineIsPigCapturable(map, state, newPosition);
@@ -37,7 +47,7 @@ namespace pig_challenge
         }
 
         // the pig is capturable if two or fewer nearby squares are empty
-        private void DetermineIsPigCapturable(Map map, State state, int[] position)
+        private void DetermineIsPigCapturable(Map map, State state, Position position)
         {
             state.IsPigCapturable = (map.GetAvailablePositions(position, state)).Count() <= 2;
         }

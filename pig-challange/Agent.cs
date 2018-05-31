@@ -17,7 +17,7 @@ namespace pig_challenge
 
         public override void DetermineStep(Map map, State state)
         {
-            int[] position = state.GetPosition(this.Identifier);
+            Position position = state.GetPosition(this.Identifier);
 
             IList<Position> path = map.GetPathToPig(this.Identifier, state);
 
@@ -26,7 +26,7 @@ namespace pig_challenge
                 return;
             }
 
-            int[] newPos = { path[1].X, path[1].Y };
+            Position newPos = new Position (path[1].X, path[1].Y );
 
             state.MoveAgent(this.Identifier, newPos);
         }

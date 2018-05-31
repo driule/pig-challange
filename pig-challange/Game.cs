@@ -75,13 +75,13 @@ namespace pig_challenge
         private void EvaluateGameState()
         {
             // agent A has won
-            if (this.map.IsCellExit(this.state.PositionAgentA[0], this.state.PositionAgentA[1]))
+            if (this.map.IsCellExit(this.state.PositionAgentA.X, this.state.PositionAgentA.Y))
             {
                 this.state.SetWinnerA();
             }
 
             // agent B has won
-            if (this.map.IsCellExit(this.state.PositionAgentB[0], this.state.PositionAgentB[1]))
+            if (this.map.IsCellExit(this.state.PositionAgentB.X, this.state.PositionAgentB.Y))
             {
                 this.state.SetWinnerB();
             }

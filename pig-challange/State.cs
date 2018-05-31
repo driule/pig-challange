@@ -1,13 +1,14 @@
 ﻿using System;
+using RoyT.AStar;
 
 namespace pig_challenge
 {
     class State
     {
         public Game.ExitCodes ExitCode;
-        public int[] PositionAgentA;
-        public int[] PositionAgentB;
-        public int[] PositionPig;
+        public Position PositionAgentA;
+        public Position PositionAgentB;
+        public Position PositionPig;
         public int ScoreAgentA;
         public int ScoreAgentB;
         public int TurnsLeft;
@@ -19,9 +20,9 @@ namespace pig_challenge
             // initially set positions to 0,0
             // the positions will be changed after PlaceAgents was called
             // these positions are only used as a placeholder for the IsCellFree method
-            this.PositionAgentA = new int[] { 0, 0 };
-            this.PositionAgentB = new int[] { 0, 0 };
-            this.PositionPig = new int[] { 0, 0 };
+            this.PositionAgentA = new Position(0,0);
+            this.PositionAgentB = new Position(0,0);
+            this.PositionPig = new Position(0,0);
 
             this.ScoreAgentA = maxTurns;
             this.ScoreAgentB = maxTurns;
@@ -40,7 +41,7 @@ namespace pig_challenge
             this.PositionPig = map.GetRandomStartPosition(this);
         }
 
-        public void MoveAgent(BasicAgent.AgentIdentifier agentId, int[] location)
+        public void MoveAgent(BasicAgent.AgentIdentifier agentId, Position location)
         {
             switch (agentId)
             {
@@ -50,19 +51,19 @@ namespace pig_challenge
             }
         }
 
-        private void MoveAgentA(int[] location)
+        private void MoveAgentA(Position location)
         {
             this.PositionAgentA = location;
             this.ScoreAgentA--;
         }
 
-        private void MoveAgentB(int[] location)
+        private void MoveAgentB(Position location)
         {
             this.PositionAgentB = location;
             this.ScoreAgentB--;
         }
 
-        private void MovePig(int[] location)
+        private void MovePig(Position location)
         {
             this.PositionPig = location;
             this.TurnsLeft--;
@@ -92,7 +93,7 @@ namespace pig_challenge
             this.ExitCode = Game.ExitCodes.IterationsExceeded;
         }
 
-        public int[] GetPosition(BasicAgent.AgentIdentifier identifier)
+        public Position GetPosition(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier) {
                 case BasicAgent.AgentIdentifier.AgentA: return this.PositionAgentA;
@@ -104,9 +105,9 @@ namespace pig_challenge
         public void Print()
         {
             Console.WriteLine("ExitCode: " + ExitCode);
-            Console.WriteLine("PositionAgentA: " + PositionAgentA[0] + ","+ PositionAgentA[1]);
-            Console.WriteLine("PositionAgentB: " + PositionAgentB[0] + "," + PositionAgentB[1]);
-            Console.WriteLine("PositionPig: " + PositionPig[0] + "," + PositionPig[1]);
+            Console.WriteLine("PositionAgentA: " + PositionAgentA.X + ","+ PositionAgentA.Y);
+            Console.WriteLine("PositionAgentB: " + PositionAgentB.X + "," + PositionAgentB.Y);
+            Console.WriteLine("PositionPig: " + PositionPig.X + "," + PositionPig.Y);
             Console.WriteLine("ScoreAgentA: " + ScoreAgentA);
             Console.WriteLine("ScoreAgentB: " + ScoreAgentB);
             Console.WriteLine("TurnsLeft: " + TurnsLeft);
