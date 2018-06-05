@@ -69,6 +69,29 @@ namespace pig_challenge
 
             return agentCooperationFactor;
         }
+
+        public Position GetBestMoveToGoalPosition(Map map, State state, Position goalPosition)
+        {
+            Position position = state.GetPosition(this.Identifier);
+
+            List<Position> availablePositions = map.GetAvailablePositions(position, state);
+
+            //This calculates the amount of steps until the position of the pig is reached, so we could subtract 1 to get to the position just before the pig
+            //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
+            //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
+            List<int> costs = availablePositions
+                                    .Select(availablePosition => (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count(), 2))
+                                    .ToList();
+
+            var orderedZip = costs.Zip(availablePositions, (x, y) => new { x, y })
+                                    .OrderBy(pair => pair.x)
+                                    .ToList();
+
+            costs = orderedZip.Select(pair => pair.x).ToList();
+            availablePositions = orderedZip.Select(pair => pair.y).ToList();
+
+            return availablePositions[0];
+        }
                
 
         public AgentIdentifier GetOtherAgentIdentifier(AgentIdentifier identifier)

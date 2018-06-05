@@ -167,32 +167,27 @@ namespace pig_challenge
 
         public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
         {
-            Position currentAgentPosition = state.GetPosition(agentId); 
-            Position agentAPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
-            Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
-            Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+            Position currentAgentPosition = state.GetPosition(agentId);
 
-            this.grid.BlockCell(agentAPosition);
-            this.grid.BlockCell(agentBPosition);
-
-            Position[] path = this.grid.GetPath(currentAgentPosition, pigPosition, MovementPatterns.LateralOnly);
-
-            this.grid.UnblockCell(agentAPosition);
-            this.grid.UnblockCell(agentBPosition);
-
-            return path;
+            return GetPathToPigFromPosition(state, currentAgentPosition);
         }
 
         public IList<Position> GetPathToPigFromPosition(State state, Position position)
+        { 
+            Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+
+            return GetPathToGoalPositionFromStartPosition(state, position, pigPosition);
+        }
+
+        public IList<Position> GetPathToGoalPositionFromStartPosition(State state, Position startPosition, Position goalPosition)
         {
             Position agentAPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
             Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
-            Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
 
             this.grid.BlockCell(agentAPosition);
             this.grid.BlockCell(agentBPosition);
 
-            Position[] path = this.grid.GetPath(position, pigPosition, MovementPatterns.LateralOnly);
+            Position[] path = this.grid.GetPath(startPosition, goalPosition, MovementPatterns.LateralOnly);
 
             this.grid.UnblockCell(agentAPosition);
             this.grid.UnblockCell(agentBPosition);
