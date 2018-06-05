@@ -41,7 +41,11 @@ namespace pig_challenge
 
         public void DecideMove(Map map, State state)
         {
+            float agentCooperationFactor = CalculateAgentCooperationFactor(map, state);  
             
+            //determine whether we will actually cooperate or not
+
+            //calculate what move we need to do considering our (non-/)cooperation
         }
 
         private float CalculateAgentCooperationFactor(Map map, State state)
