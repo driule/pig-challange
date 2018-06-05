@@ -27,8 +27,8 @@ namespace pig_challenge
         {
             this.MaxIterations = maxIterations;
 
-            this.agentA = new Agent(BasicAgent.AgentIdentifier.AgentA); 
-            this.agentB = new Agent(BasicAgent.AgentIdentifier.AgentB);
+            this.agentA = new Agent(BasicAgent.AgentIdentifier.AgentA, 0.2f, 0.5f, 0.3f); 
+            this.agentB = new Agent(BasicAgent.AgentIdentifier.AgentB, 0.2f, 0.5f, 0.3f);
             this.pig = new Pig();
             this.map = new Map();
 

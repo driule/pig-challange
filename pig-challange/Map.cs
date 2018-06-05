@@ -14,6 +14,7 @@ namespace pig_challenge
             Exit = 2
         }
 
+        public float maxDistanceToPig = 9.0f;
         // Create a new grid and let each cell have a default traversal cost of 1.0
         private Grid grid;
 

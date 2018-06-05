@@ -8,10 +8,15 @@ namespace pig_challenge
     class Agent : BasicAgent
     {
         private AgentIdentifier Identifier { get; }
+        private float alpha, beta, gamma;
 
-        public Agent(AgentIdentifier identifier)
+        public Agent(AgentIdentifier identifier, float alpha, float beta, float gamma)
         {
             this.Identifier = identifier;
+            this.alpha = alpha;
+            this.beta = beta;
+            this.gamma = gamma;
+
             this.randomizer = new Random();
         }
 
@@ -33,7 +38,34 @@ namespace pig_challenge
             state.MoveAgent(this.Identifier, newPos);
         }
 
-        
+
+        public void DecideMove(Map map, State state)
+        {
+            
+        }
+
+        private float CalculateAgentCooperationFactor(Map map, State state)
+        {
+            AgentIdentifier otherAgentID = this.GetOtherAgentIdentifier(this.Identifier);
+
+            int distanceAToPig = map.GetPathToPig(AgentIdentifier.AgentA, state).Count();
+            int distanceBToPig = map.GetPathToPig(AgentIdentifier.AgentB, state).Count();
+
+
+            float agentCooperationFactor = 0.0f;
+
+            float distanceRatio = (1.0f - ((float)(distanceAToPig + distanceBToPig) / (2.0f * map.maxDistanceToPig)));
+            if (distanceRatio < 0.0f)
+                throw new Exception("distance ratio too big, probably maxDistance isn't the actual max");
+            agentCooperationFactor += this.alpha * distanceRatio;
+
+            agentCooperationFactor += this.beta * state.GetCooperationProbability(otherAgentID);
+
+            agentCooperationFactor += this.gamma * (float)state.GetScore(otherAgentID) / 25.0f;
+
+            return agentCooperationFactor;
+        }
+               
 
         public AgentIdentifier GetOtherAgentIdentifier(AgentIdentifier identifier)
         {

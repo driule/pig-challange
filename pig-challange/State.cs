@@ -109,6 +109,46 @@ namespace pig_challenge
             }
         }
 
+        public Position GetPrevPosition(BasicAgent.AgentIdentifier identifier)
+        {
+            switch (identifier)
+            {
+                case BasicAgent.AgentIdentifier.AgentA: return this.PrevPositionAgentA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.PrevPositionAgentB;
+                default: throw new Exception("identifier has no prevposition");
+            }
+        }
+
+        public List<float> GetConditionalProbabilities(BasicAgent.AgentIdentifier identifier)
+        {
+            switch (identifier)
+            {
+                case BasicAgent.AgentIdentifier.AgentA: return this.ConditionalProbabilitiesA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.ConditionalProbabilitiesB;
+                default: throw new Exception("identifier has no conditional probabilities");
+            }
+        }
+
+        public float GetCooperationProbability(BasicAgent.AgentIdentifier identifier)
+        {
+            switch (identifier)
+            {
+                case BasicAgent.AgentIdentifier.AgentA: return this.CooperationProbabilityA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.CooperationProbabilityB;
+                default: throw new Exception("identifier has no cooperation probability");
+            }
+        }
+
+        public int GetScore(BasicAgent.AgentIdentifier identifier)
+        {
+            switch (identifier)
+            {
+                case BasicAgent.AgentIdentifier.AgentA: return this.ScoreAgentA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.ScoreAgentB;
+                default: throw new Exception("identifier has no score");
+            }
+        }
+
         public void Print()
         {
             Console.WriteLine("ExitCode: " + ExitCode);
