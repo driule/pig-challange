@@ -33,8 +33,9 @@ namespace pig_challenge
                 return;
             }
 
-            Position newPos = new Position (path[1].X, path[1].Y );
+            Position newPos = new Position(path[1].X, path[1].Y);
 
+            //Position newPos = this.DecideMove(map, state);
             state.MoveAgent(this.Identifier, newPos);
         }
 
@@ -126,7 +127,6 @@ namespace pig_challenge
                 return move1.Item1;
             else
                 return move2.Item1;
-
         }
 
 
