@@ -18,6 +18,8 @@ namespace pig_challenge
         public bool IsPigCapturable;
         public List<float> ConditionalProbabilitiesA;
         public List<float> ConditionalProbabilitiesB;
+        public float CooperationProbabilityA;
+        public float CooperationProbabilityB;
         private int maxTurns;
 
         public State(int maxTurns)
