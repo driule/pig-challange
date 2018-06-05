@@ -70,7 +70,7 @@ namespace pig_challenge
             return agentCooperationFactor;
         }
 
-        public Position GetBestMoveToGoalPosition(Map map, State state, Position goalPosition)
+        public Tuple<Position, int> GetBestMoveToGoalPosition(Map map, State state, Position goalPosition)
         {
             Position position = state.GetPosition(this.Identifier);
 
@@ -83,14 +83,21 @@ namespace pig_challenge
                                     .Select(availablePosition => (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count(), 2))
                                     .ToList();
 
-            var orderedZip = costs.Zip(availablePositions, (x, y) => new { x, y })
-                                    .OrderBy(pair => pair.x)
+            List<Tuple<Position, int>> orderedZip = availablePositions.Zip(costs, (x, y) => new Tuple<Position, int>( x, y ))
+                                    .OrderBy(pair => pair.Item2)
                                     .ToList();
 
-            costs = orderedZip.Select(pair => pair.x).ToList();
-            availablePositions = orderedZip.Select(pair => pair.y).ToList();
+            return orderedZip[0];
+        }
 
-            return availablePositions[0];
+        private Position GetCooperationMove(Map map, State state)
+        {
+            return this.GetBestMoveToGoalPosition(map, state, state.GetPosition(AgentIdentifier.Pig)).Item1;
+        }
+
+        private Position GetDefectMove(Map map, State state)
+        {
+            // 
         }
                
 
