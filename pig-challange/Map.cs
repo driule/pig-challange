@@ -182,9 +182,8 @@ namespace pig_challenge
             return path;
         }
 
-        public IList<Position> GetPathToPigFromPosition(BasicAgent.AgentIdentifier agentId, State state, Position position)
+        public IList<Position> GetPathToPigFromPosition(State state, Position position)
         {
-            Position currentAgentPosition = state.GetPosition(agentId);
             Position agentAPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
             Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
             Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);

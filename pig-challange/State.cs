@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RoyT.AStar;
 
 namespace pig_challenge
@@ -6,13 +7,17 @@ namespace pig_challenge
     class State
     {
         public Game.ExitCodes ExitCode;
+        public Position PrevPositionAgentA;
         public Position PositionAgentA;
+        public Position PrevPositionAgentB;
         public Position PositionAgentB;
         public Position PositionPig;
         public int ScoreAgentA;
         public int ScoreAgentB;
         public int TurnsLeft;
         public bool IsPigCapturable;
+        public List<float> ConditionalProbabilitiesA;
+        public List<float> ConditionalProbabilitiesB;
         private int maxTurns;
 
         public State(int maxTurns)

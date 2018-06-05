@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RoyT.AStar;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace pig_challenge
@@ -98,6 +100,72 @@ namespace pig_challenge
             {
                 this.state.SetOutOfTurns();
             }
+        }
+
+
+        private void CalculateConditionalProbabilities(BasicAgent.AgentIdentifier id)
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public List<float> GetPCMConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier id)
+        {
+            //First call GetPMCConditionalPropabilities and GetCooperationPrior, then calculate for all m and all c: P(m|c) * P(c), put them in a temporary list. 
+            //  Then calculate over all m and all c: P(c|m) = ( P(m|c) * P(c)) / SUM_C( P(m|i)*P(i) ). So only bottom half really needs to be calculated and 
+            //  we use the precalculated ones from the list created.
+
+            return new List<float>();
+        }
+
+        /// <summary>
+        /// Returns Conditional probabilities in P(0|m1),.. P(0|m4), P(1|m1) order 
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public List<float> GetPMCConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier id)
+        {
+            Position position = state.GetPosition(id);
+
+            List<Position> availablePositions = map.GetAvailablePositions(position, state);
+
+            //This calculates the amount of steps until the position of the pig is reached, so we could subtract 1 to get to the position just before the pig
+            //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
+            //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
+            List<int> costs = availablePositions
+                                    .Select(availablePosition => (int)Math.Pow(map.GetPathToPigFromPosition(state, availablePosition).Count(), 2))
+                                    .ToList();
+
+            float sum = (float)costs.Sum();
+
+            List<float> probabilities = costs
+                                            .Select(cost => ((float)cost / (float)sum))
+                                            .ToList();
+
+            int count = probabilities.Count;
+            for (int i = 0; i < count; i++)
+            {
+                probabilities.Add(1 - probabilities[i]);
+            }
+
+            return probabilities;
+        }
+
+        private float GetCooperationPrior(State state)
+        {
+            return 0.0f;
+
+            //Use conditional probability matrix from state to get the probability of cooperation from last turn. 
+            // Or when it's the first turn, use the prior?
+
+
+
         }
     }
 }
