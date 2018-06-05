@@ -39,13 +39,26 @@ namespace pig_challenge
         }
 
 
-        public void DecideMove(Map map, State state)
+        public Position DecideMove(Map map, State state)
         {
-            float agentCooperationFactor = CalculateAgentCooperationFactor(map, state);  
-            
-            //determine whether we will actually cooperate or not
+            float agentCooperationFactor = CalculateAgentCooperationFactor(map, state);
 
-            //calculate what move we need to do considering our (non-/)cooperation
+            //determine whether we will actually cooperate or not and 
+            //  calculate what move we need to do considering our (non-/)cooperation
+
+            //Position newPos;
+            //if (agentCooperationFactor > 0.5f)
+            //    newPos = GetCooperationMove(map, state);
+            //else
+            //    newPos = GetDefectMove(map, state);
+
+            Position newPos;
+            if (agentCooperationFactor > randomizer.NextDouble())
+                newPos = GetCooperationMove(map, state);
+            else
+                newPos = GetDefectMove(map, state);
+
+            return newPos;
         }
 
         private float CalculateAgentCooperationFactor(Map map, State state)
@@ -80,14 +93,19 @@ namespace pig_challenge
             //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
             //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
             List<int> costs = availablePositions
-                                    .Select(availablePosition => (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count(), 2))
+                                    .Select(availablePosition => map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count())
                                     .ToList();
 
             List<Tuple<Position, int>> orderedZip = availablePositions.Zip(costs, (x, y) => new Tuple<Position, int>( x, y ))
                                     .OrderBy(pair => pair.Item2)
                                     .ToList();
 
-            return orderedZip[0];
+            //If you're already next to the goal, don't move.
+            if (orderedZip[0].Item2 <= 1)
+                return new Tuple<Position, int>(position, 0);
+            //Else, do move
+            else 
+                return orderedZip[0];
         }
 
         private Position GetCooperationMove(Map map, State state)
@@ -97,9 +115,20 @@ namespace pig_challenge
 
         private Position GetDefectMove(Map map, State state)
         {
-            // 
+            //Exits at (x == 1 && y == 4) || (x == 7 && y == 4)
+            Position exitPos1 = new Position(1, 4);
+            Position exitPos2 = new Position(7, 4);
+
+            Tuple<Position, int> move1 = GetBestMoveToGoalPosition(map, state, exitPos1);
+            Tuple<Position, int> move2 = GetBestMoveToGoalPosition(map, state, exitPos2);
+
+            if (move1.Item2 < move2.Item2)
+                return move1.Item1;
+            else
+                return move2.Item1;
+
         }
-               
+
 
         public AgentIdentifier GetOtherAgentIdentifier(AgentIdentifier identifier)
         {
