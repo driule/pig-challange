@@ -16,8 +16,6 @@ namespace pig_challenge
         public int ScoreAgentB;
         public int TurnsLeft;
         public bool IsPigCapturable;
-        public List<float> ConditionalProbabilitiesA;
-        public List<float> ConditionalProbabilitiesB;
         public float CooperationProbabilityA;
         public float CooperationProbabilityB;
         private int maxTurns;
@@ -116,16 +114,6 @@ namespace pig_challenge
                 case BasicAgent.AgentIdentifier.AgentA: return this.PrevPositionAgentA;
                 case BasicAgent.AgentIdentifier.AgentB: return this.PrevPositionAgentB;
                 default: throw new Exception("identifier has no prevposition");
-            }
-        }
-
-        public List<float> GetConditionalProbabilities(BasicAgent.AgentIdentifier identifier)
-        {
-            switch (identifier)
-            {
-                case BasicAgent.AgentIdentifier.AgentA: return this.ConditionalProbabilitiesA;
-                case BasicAgent.AgentIdentifier.AgentB: return this.ConditionalProbabilitiesB;
-                default: throw new Exception("identifier has no conditional probabilities");
             }
         }
 
