@@ -137,6 +137,9 @@ namespace pig_challenge
 
             List<float> PCMs = PMCs.Select((PMC, index) =>
             {
+                if (PMC == 0.0f)
+                    return 0.0f;
+
                 var upper = precalculatedPmiXPi[index];
                 int div = index / 5; //0..4=>0, 5..9=>1
                 int mulFactor = (1 - 2 * div); // 0=>1, 1=>-1
@@ -165,7 +168,7 @@ namespace pig_challenge
             //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
             //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
             List<int> pigCosts = availablePositions
-                                    .Select(availablePosition => (int)Math.Pow(map.GetPathToPigFromPosition(state, availablePosition).Count(), 2))
+                                    .Select(availablePosition => (int)Math.Pow(map.GetPathToPigFromPosition(state, availablePosition).Count, 2))
                                     .ToList();
 
             float sum = (float)pigCosts.Sum();
@@ -184,10 +187,10 @@ namespace pig_challenge
             //Now we need to do the same for the exits, but now we take the minimum of the two lengths of the paths
             // Position of exits: (x == 1 && y == 4) || (x == 7 && y == 4)
             List<int> exitCosts = availablePositions
-                                    .Select(availablePosition => Math.Min( 
-                                                                    (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(1, 4) ).Count(), 2),
-                                                                    (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(7, 4)).Count(), 2) 
-                                                                    ))
+                                    .Select(availablePosition => Math.Min(
+                                                (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(1, 4)).Count, 2),
+                                                (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(7, 4)).Count, 2)
+                                                ))
                                     .ToList();
 
             sum = (float)exitCosts.Sum();
@@ -236,8 +239,11 @@ namespace pig_challenge
             Position pos = state.GetPosition(id);
             Position prevPos = state.GetPrevPosition(id);
 
-            if (1 - PCMs[0] - PCMs[5] > 0.01f)
-                throw new Exception("AHH INVALID");
+            for(int i = 0; i < 5; i++)
+            {
+                if (PCMs[i] != 0.0f && PCMs[i + 5] != 0.0f && Math.Abs(1.0f - PCMs[i] - PCMs[i + 5]) > 0.01f)
+                    throw new Exception("AHH INVALID PCMs");
+            }
 
             //TODO: CHECK IF PCM[0] == 1 - PCM[5], P(C|m1) == 1 - P(-C|m1), this should be the case!
             //Switch based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
