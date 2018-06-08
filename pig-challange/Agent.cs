@@ -24,16 +24,17 @@ namespace pig_challenge
         {
             Position position = state.GetPosition(this.Identifier);
 
-            //List<float> conditionalProbabilities = this.GetPMCConditionalPropabilities(map, state);
 
-            IList<Position> path = map.GetPathToPig(this.Identifier, state);
+            //IList<Position> path = map.GetPathToPig(this.Identifier, state);
 
-            if (path.Count <= 2)
-            {
-                return;
-            }
+            //if (path.Count <= 2)
+            //{
+            //    return;
+            //}
 
-            Position newPos = new Position(path[1].X, path[1].Y);
+            //Position newPos = new Position(path[1].X, path[1].Y);
+
+            Position newPos = this.DecideMove(map, state);
 
             //Position newPos = this.DecideMove(map, state);
             state.MoveAgent(this.Identifier, newPos);

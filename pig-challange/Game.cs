@@ -38,10 +38,13 @@ namespace pig_challenge
 
         public State Run()
         {
+            List<float> tempPCM_Matrix;
             this.map.Draw(0, this.state);
             for (int i = 0; i < this.MaxIterations; i++)
             {
+                tempPCM_Matrix = this.GetPCMConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentA);
                 this.agentA.DetermineStep(this.map, this.state);
+                this.CalculateAndUpdateCooperationPrior(state, tempPCM_Matrix, BasicAgent.AgentIdentifier.AgentA);
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
@@ -50,7 +53,9 @@ namespace pig_challenge
                     return this.state;
                 }
 
+                tempPCM_Matrix = this.GetPCMConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentB);
                 this.agentB.DetermineStep(this.map, this.state);
+                this.CalculateAndUpdateCooperationPrior(state, tempPCM_Matrix, BasicAgent.AgentIdentifier.AgentB);
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
@@ -222,7 +227,7 @@ namespace pig_challenge
             return probabilities;
         }
 
-        private float CalculateCooperationPrior(State state, List<float> PCMs, BasicAgent.AgentIdentifier id)
+        private void CalculateAndUpdateCooperationPrior(State state, List<float> PCMs, BasicAgent.AgentIdentifier id)
         {
             //WRONG return state.GetCooperationProbability(id);
             //Use conditional probability matrix from state to get the probability of cooperation from last turn. 
@@ -234,7 +239,7 @@ namespace pig_challenge
             //TODO: CHECK IF PCM[0] == 1 - PCM[5], P(C|m1) == 1 - P(-C|m1), this should be the case!
             //Switch based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
             //For this, we do need a fixed size of the PMC list, so all moves need to be represented
-            return PCMs[this.GetMoveCode(pos, prevPos)];
+            state.UpdateCooperationProbability(id, PCMs[this.GetMoveCode(pos, prevPos)]);
         }
 
         /// <summary>

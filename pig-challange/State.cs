@@ -98,6 +98,20 @@ namespace pig_challenge
             this.ExitCode = Game.ExitCodes.IterationsExceeded;
         }
 
+        public void UpdateCooperationProbability(BasicAgent.AgentIdentifier identifier, float cooperationProbability)
+        {
+            switch (identifier)
+            {
+                case BasicAgent.AgentIdentifier.AgentA:
+                    this.CooperationProbabilityA = cooperationProbability;
+                    break;
+                case BasicAgent.AgentIdentifier.AgentB:
+                    this.CooperationProbabilityB = cooperationProbability;
+                    break;
+                default: throw new Exception("identifier has no cooperation probability");
+            }
+        }
+
         public Position GetPosition(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier) {
