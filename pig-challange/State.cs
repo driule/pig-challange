@@ -22,6 +22,9 @@ namespace pig_challenge
 
         public State(int maxTurns)
         {
+            this.PrevPositionAgentA = new Position(0, 0);
+            this.PrevPositionAgentB = new Position(0, 0);
+
             // initially set positions to 0,0
             // the positions will be changed after PlaceAgents was called
             // these positions are only used as a placeholder for the IsCellFree method
@@ -37,6 +40,9 @@ namespace pig_challenge
             this.ExitCode = Game.ExitCodes.InProgress;
 
             this.IsPigCapturable = true; //TODO
+
+            this.CooperationProbabilityA = 0.5f;
+            this.CooperationProbabilityB = 0.5f;
         }
 
         public void PlaceAgents(Map map)
@@ -58,12 +64,14 @@ namespace pig_challenge
 
         private void MoveAgentA(Position location)
         {
+            this.PrevPositionAgentA = this.PositionAgentA;
             this.PositionAgentA = location;
             this.ScoreAgentA--;
         }
 
         private void MoveAgentB(Position location)
         {
+            this.PrevPositionAgentB = this.PositionAgentB;
             this.PositionAgentB = location;
             this.ScoreAgentB--;
         }
