@@ -21,7 +21,7 @@ namespace pig_challenge
 
             foreach(Position pos in positions)
             {
-                if (map.IsCellExit(pos.X, pos.Y))
+                if (map.IsCellExit(pos.X, pos.Y) || pos == position)
                 {
                     positions.Remove(pos);
                     break;

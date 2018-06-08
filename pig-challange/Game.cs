@@ -95,7 +95,7 @@ namespace pig_challenge
             }
 
             // the pig was caught, i.e. the pig has no adjacent squares that it can move to
-            if (this.map.GetAvailablePositions(this.state.PositionPig, state).Count() == 0)
+            if (this.map.GetAvailablePositions(this.state.PositionPig, state).Count() == 1)
             {
                 this.state.SetWinnerBoth();
             }
@@ -235,6 +235,9 @@ namespace pig_challenge
 
             Position pos = state.GetPosition(id);
             Position prevPos = state.GetPrevPosition(id);
+
+            if (1 - PCMs[0] - PCMs[5] > 0.01f)
+                throw new Exception("AHH INVALID");
 
             //TODO: CHECK IF PCM[0] == 1 - PCM[5], P(C|m1) == 1 - P(-C|m1), this should be the case!
             //Switch based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
