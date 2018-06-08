@@ -198,5 +198,13 @@ namespace pig_challenge
 
             return path;
         }
+
+        public int GetActualPathCost(int count)
+        {
+            if (count == 0)
+                return 800;
+            else
+                return (int)Math.Pow(count, 2);
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace pig_challenge
         // the pig is capturable if two or fewer nearby squares are empty
         private void DetermineIsPigCapturable(Map map, State state, Position position)
         {
-            state.IsPigCapturable = (map.GetAvailablePositions(position, state)).Count() <= 2;
+            state.IsPigCapturable = (map.GetAvailablePositions(position, state)).Count() <= 3;
         }
     }
 }

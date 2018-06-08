@@ -48,17 +48,17 @@ namespace pig_challenge
             //determine whether we will actually cooperate or not and 
             //  calculate what move we need to do considering our (non-/)cooperation
 
-            //Position newPos;
-            //if (agentCooperationFactor > 0.5f)
-            //    newPos = GetCooperationMove(map, state);
-            //else
-            //    newPos = GetDefectMove(map, state);
-
             Position newPos;
-            if (agentCooperationFactor > randomizer.NextDouble())
+            if (agentCooperationFactor > 0.5f)
                 newPos = GetCooperationMove(map, state);
             else
                 newPos = GetDefectMove(map, state);
+
+            //Position newPos;
+            //if (agentCooperationFactor > randomizer.NextDouble())
+            //    newPos = GetCooperationMove(map, state);
+            //else
+            //    newPos = GetDefectMove(map, state);
 
             return newPos;
         }
@@ -95,7 +95,7 @@ namespace pig_challenge
             //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
             //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
             List<int> costs = availablePositions
-                                    .Select(availablePosition => map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count())
+                                    .Select(availablePosition => map.GetActualPathCost(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count))
                                     .ToList();
 
             List<Tuple<Position, int>> orderedZip = availablePositions.Zip(costs, (x, y) => new Tuple<Position, int>( x, y ))
