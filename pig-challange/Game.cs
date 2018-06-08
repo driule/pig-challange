@@ -122,9 +122,26 @@ namespace pig_challenge
             List<float> PMCs = this.GetPMCConditionalProbabilities(map, state, id);
             float cooperationProbability = state.GetCooperationProbability(id);
 
+            List<float> precalculatedPmiXPi = PMCs.Select((PMC, index) =>
+            {
+                if (index <= 4)
+                    return PMC * cooperationProbability;
+                else //index > 5, so we need to use P(-c) 
+                    return PMC * (1.0f - cooperationProbability);
+            }).ToList();
+
+            List<float> PCMs = PMCs.Select((PMC, index) =>
+            {
+                var upper = precalculatedPmiXPi[index];
+                int div = index / 5; //0..4=>0, 5..9=>1
+                int mulFactor = (1 - 2 * div); // 0=>1, 1=>-1
+                int otherIndex = mulFactor * 5 + index; // results in: index of 0 <=> 5, 1 <=> 6
+                return precalculatedPmiXPi[index] / (precalculatedPmiXPi[index] + precalculatedPmiXPi[otherIndex]);
+            }).ToList();
+
             //Calculate P(m) by going over all SUM_C( P(m|i) * P(i) ) //TODO: smartly
 
-            return new List<float>();
+            return PCMs;
         }
 
         /// <summary>
