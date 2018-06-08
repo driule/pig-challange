@@ -128,7 +128,7 @@ namespace pig_challenge
         }
 
         /// <summary>
-        /// Returns Conditional probabilities in P(0|m1),.. P(0|m4), P(1|m1) order 
+        /// Returns Conditional probabilities in P(0|m1),.. P(0|m5), P(1|m1) order 
         /// </summary>
         /// <param name="map"></param>
         /// <param name="state"></param>
@@ -214,13 +214,14 @@ namespace pig_challenge
             Position pos = state.GetPosition(id);
             Position prevPos = state.GetPrevPosition(id);
 
-            //Switch based on previous movement, up = 0, right = 1, down = 2, left = 3
+            //TODO: CHECK IF PCM[0] == 1 - PCM[5], P(C|m1) == 1 - P(-C|m1), this should be the case!
+            //Switch based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
             //For this, we do need a fixed size of the PMC list, so all moves need to be represented
             return PCMs[this.GetMoveCode(pos, prevPos)];
         }
 
         /// <summary>
-        /// Return move code based on previous movement, up = 0, right = 1, down = 2, left = 3
+        /// Return move code based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="prevPos"></param>
@@ -238,9 +239,14 @@ namespace pig_challenge
                     return 0;
                 }
                 //Down
-                else
+                else if(diff.Y > 0)
                 {
                     return 2;
+                }
+                //Same position
+                else
+                {
+                    return 4;
                 }
             }
             //Horizontal movement
