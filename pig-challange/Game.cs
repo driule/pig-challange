@@ -188,8 +188,8 @@ namespace pig_challenge
             // Position of exits: (x == 1 && y == 4) || (x == 7 && y == 4)
             List<int> exitCosts = availablePositions
                                     .Select(availablePosition => Math.Min(
-                                                (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(1, 4)).Count, 2),
-                                                (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(7, 4)).Count, 2)
+                                                GetActualPathCost(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(1, 4)).Count),
+                                                GetActualPathCost(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(7, 4)).Count)
                                                 ))
                                     .ToList();
 
@@ -205,6 +205,13 @@ namespace pig_challenge
             defectProbabilities = this.InsertImpossibleMovesProbabilities(defectProbabilities, availablePositions, position);
 
             return cooperationProbabilities.Concat(defectProbabilities).ToList();
+        }
+        private int GetActualPathCost(int count)
+        {
+            if (count == 0)
+                return 800;
+            else
+                return (int)Math.Pow(count, 2);
         }
 
         private List<float> InsertImpossibleMovesProbabilities(List<float> probabilities, List<Position> availablePositions, Position agentPosition)
