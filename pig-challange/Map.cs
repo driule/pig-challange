@@ -151,18 +151,22 @@ namespace pig_challenge
         {
             List<Position> availablePositions = new List<Position>
             {
-                new Position( position.X - 1, position.Y),
-                new Position( position.X, position.Y - 1),
-                new Position( position.X + 1, position.Y),
-                new Position( position.X, position.Y + 1)
+                new Position( position.X, position.Y - 1), //Up
+                new Position( position.X + 1, position.Y), //Right
+                new Position( position.X, position.Y + 1), //Down
+                new Position( position.X - 1, position.Y)  //Left
             };
 
-            return availablePositions.Where(pos =>
+            List<Position> possiblePositions = availablePositions.Where(pos =>
             {
                 int x = pos.X;
                 int y = pos.Y;
                 return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
             }).ToList();
+
+            possiblePositions.Add(new Position(position.X, position.Y));     //Same position 
+            return possiblePositions;
+
         }
 
         public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
