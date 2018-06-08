@@ -142,25 +142,44 @@ namespace pig_challenge
             //This calculates the amount of steps until the position of the pig is reached, so we could subtract 1 to get to the position just before the pig
             //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
             //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
-            List<int> costs = availablePositions
+            List<int> pigCosts = availablePositions
                                     .Select(availablePosition => (int)Math.Pow(map.GetPathToPigFromPosition(state, availablePosition).Count(), 2))
                                     .ToList();
 
-            float sum = (float)costs.Sum();
+            float sum = (float)pigCosts.Sum();
 
-            List<float> probabilities = costs
-                                            .Select(cost => ((float)cost / (float)sum))
+            List<float> cooperationProbabilities = pigCosts
+                                            .Select(cost => 1.0f - ((float)cost / (float)sum))
                                             .ToList();
-            probabilities = this.InsertImpossibleMovesProbabilities(probabilities, availablePositions, position);
+            sum = cooperationProbabilities.Sum();
+            cooperationProbabilities.Select(prob => (prob / sum))
+                                    .ToList();
+
+            cooperationProbabilities = this.InsertImpossibleMovesProbabilities(cooperationProbabilities, availablePositions, position);
 
 
-            int count = probabilities.Count;
-            for (int i = 0; i < count; i++)
-            {
-                probabilities.Add(1 - probabilities[i]);
-            }
 
-            return probabilities;
+            //Now we need to do the same for the exits, but now we take the minimum of the two lengths of the paths
+            // Position of exits: (x == 1 && y == 4) || (x == 7 && y == 4)
+            List<int> exitCosts = availablePositions
+                                    .Select(availablePosition => Math.Min( 
+                                                                    (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(1, 4) ).Count(), 2),
+                                                                    (int)Math.Pow(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(7, 4)).Count(), 2) 
+                                                                    ))
+                                    .ToList();
+
+            sum = (float)exitCosts.Sum();
+
+            List<float> defectProbabilities = exitCosts
+                                            .Select(cost => 1.0f - ((float)cost / (float)sum))
+                                            .ToList();
+            sum = defectProbabilities.Sum();
+            defectProbabilities.Select(prob => (prob / sum))
+                                .ToList();
+
+            defectProbabilities = this.InsertImpossibleMovesProbabilities(defectProbabilities, availablePositions, position);
+
+            return cooperationProbabilities.Concat(defectProbabilities).ToList();
         }
 
         private List<float> InsertImpossibleMovesProbabilities(List<float> probabilities, List<Position> availablePositions, Position agentPosition)
