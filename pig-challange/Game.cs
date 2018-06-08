@@ -135,7 +135,6 @@ namespace pig_challenge
         /// <returns></returns>
         public List<float> GetPMCConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier id)
         {
-            //TODO, sort in order: up, right, down, left
             Position position = state.GetPosition(id);
 
             List<Position> availablePositions = map.GetAvailablePositions(position, state);
@@ -152,11 +151,36 @@ namespace pig_challenge
             List<float> probabilities = costs
                                             .Select(cost => ((float)cost / (float)sum))
                                             .ToList();
+            probabilities = this.InsertImpossibleMovesProbabilities(probabilities, availablePositions, position);
+
 
             int count = probabilities.Count;
             for (int i = 0; i < count; i++)
             {
                 probabilities.Add(1 - probabilities[i]);
+            }
+
+            return probabilities;
+        }
+
+        private List<float> InsertImpossibleMovesProbabilities(List<float> probabilities, List<Position> availablePositions, Position agentPosition)
+        {
+            List<Position> cloneAvailablePositions = new List<Position>(availablePositions);
+            List<Position> potentialPositions = new List<Position>
+            {
+                new Position( agentPosition.X,      agentPosition.Y - 1), //Up
+                new Position( agentPosition.X + 1,  agentPosition.Y), //Right
+                new Position( agentPosition.X,      agentPosition.Y + 1), //Down
+                new Position( agentPosition.X - 1,  agentPosition.Y)  //Left
+            };
+            //Standing still is always added
+            for (int i = 0; i < 4; i++)
+            {
+                if(cloneAvailablePositions[i] != potentialPositions[i])
+                {
+                    cloneAvailablePositions.Insert(i, potentialPositions[i]);
+                    probabilities.Insert(i, 0.0f);
+                }
             }
 
             return probabilities;
