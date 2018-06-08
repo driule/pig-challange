@@ -174,7 +174,7 @@ namespace pig_challenge
                                             .Select(cost => 1.0f - ((float)cost / (float)sum))
                                             .ToList();
             sum = cooperationProbabilities.Sum();
-            cooperationProbabilities.Select(prob => (prob / sum))
+            cooperationProbabilities = cooperationProbabilities.Select(prob => (prob / sum))
                                     .ToList();
 
             cooperationProbabilities = this.InsertImpossibleMovesProbabilities(cooperationProbabilities, availablePositions, position);
@@ -196,7 +196,7 @@ namespace pig_challenge
                                             .Select(cost => 1.0f - ((float)cost / (float)sum))
                                             .ToList();
             sum = defectProbabilities.Sum();
-            defectProbabilities.Select(prob => (prob / sum))
+            defectProbabilities = defectProbabilities.Select(prob => (prob / sum))
                                 .ToList();
 
             defectProbabilities = this.InsertImpossibleMovesProbabilities(defectProbabilities, availablePositions, position);
