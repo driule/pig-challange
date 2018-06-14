@@ -48,17 +48,17 @@ namespace pig_challenge
             //determine whether we will actually cooperate or not and 
             //  calculate what move we need to do considering our (non-/)cooperation
 
-            Position newPos;
-            if (agentCooperationFactor > 0.5f)
-                newPos = GetCooperationMove(map, state);
-            else
-                newPos = GetDefectMove(map, state);
-
             //Position newPos;
-            //if (agentCooperationFactor > randomizer.NextDouble())
+            //if (agentCooperationFactor > 0.5f)
             //    newPos = GetCooperationMove(map, state);
             //else
             //    newPos = GetDefectMove(map, state);
+
+            Position newPos;
+            if (agentCooperationFactor > randomizer.NextDouble())
+                newPos = GetCooperationMove(map, state);
+            else
+                newPos = GetDefectMove(map, state);
 
             return newPos;
         }
@@ -95,14 +95,20 @@ namespace pig_challenge
             //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
             //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
             List<int> costs = availablePositions
-                                    .Select(availablePosition => map.GetActualPathCost(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition).Count))
+                                    .Select(availablePosition => 
+                                                map.GetActualPathCost(
+                                                    map.GetPathToGoalPositionFromStartPosition(state, availablePosition, goalPosition)
+                                                            .Count))
                                     .ToList();
 
-            List<Tuple<Position, int>> orderedZip = availablePositions.Zip(costs, (x, y) => new Tuple<Position, int>( x, y ))
+            //Now sort the available positions by the cost of the path from this position and then choose the smallest cost: orderedZip[0]
+            List<Tuple<Position, int>> orderedZip = availablePositions.Zip(costs, 
+                                                                            (x, y) => new Tuple<Position, int>( x, y ))
                                     .OrderBy(pair => pair.Item2)
                                     .ToList();
 
-            //If you're already next to the goal, don't move.
+            //If you're already next to the goal, don't move. 
+            //  A cost of 1 means the path contains 1 element, which is the case if you're already next to the goal
             if (orderedZip[0].Item2 <= 1)
                 return new Tuple<Position, int>(position, 0);
             //Else, do move

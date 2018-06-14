@@ -124,26 +124,35 @@ namespace pig_challenge
             //First call GetPMCConditionalPropabilities and GetCooperationPrior, then calculate for all m and all c: P(m|c) * P(c), put them in a temporary list. 
             //  Then calculate over all m and all c: P(c|m) = ( P(m|c) * P(c)) / SUM_C( P(m|i)*P(i) ). So only bottom half really needs to be calculated and 
             //  we use the precalculated ones from the list created.
+
+            //Get the PMCs, which are in P(m1|0),.. P(m5|0), P(m1|1) order 
             List<float> PMCs = this.GetPMCConditionalProbabilities(map, state, id);
             float cooperationProbability = state.GetCooperationProbability(id);
 
+            //Precalculated bottom parts
             List<float> precalculatedPmiXPi = PMCs.Select((PMC, index) =>
             {
+                //This switch accounts for the fact that the first 5 elements are PMC and 
+                //   last 5 are PMnotC, with notC being 1 - C
                 if (index <= 4)
                     return PMC * cooperationProbability;
                 else //index > 5, so we need to use P(-c) 
                     return PMC * (1.0f - cooperationProbability);
             }).ToList();
 
+
             List<float> PCMs = PMCs.Select((PMC, index) =>
             {
+                //We won't use this prob. because it's unavailable or no path to goal, so really bad and thus 0.0f is perfect.
                 if (PMC == 0.0f)
                     return 0.0f;
 
-                var upper = precalculatedPmiXPi[index];
+                //This is a really unreadable way to get both indices of precalculated value, for one movement and two C's:
+                //  C and not C. We need those two, because we sum over both possible C's. They are located at 0&4, 1&5,...
                 int div = index / 5; //0..4=>0, 5..9=>1
                 int mulFactor = (1 - 2 * div); // 0=>1, 1=>-1
                 int otherIndex = mulFactor * 5 + index; // results in: index of 0 <=> 5, 1 <=> 6
+                //Calculate PCM
                 return precalculatedPmiXPi[index] / (precalculatedPmiXPi[index] + precalculatedPmiXPi[otherIndex]);
             }).ToList();
 
@@ -153,7 +162,7 @@ namespace pig_challenge
         }
 
         /// <summary>
-        /// Returns Conditional probabilities in P(0|m1),.. P(0|m5), P(1|m1) order 
+        /// Returns Conditional probabilities in P(m1|0),.. P(m5|0), P(m1|1) order 
         /// </summary>
         /// <param name="map"></param>
         /// <param name="state"></param>
@@ -168,18 +177,30 @@ namespace pig_challenge
             //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
             //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
             List<int> pigCosts = availablePositions
-                                    .Select(availablePosition => map.GetActualPathCost(map.GetPathToPigFromPosition(state, availablePosition).Count))
+                                    .Select(availablePosition => 
+                                                map.GetActualPathCost(
+                                                    map.GetPathToPigFromPosition(state, availablePosition)
+                                                            .Count))
                                     .ToList();
 
+            //Normalize, by first calculating sum and then divide every one by the sum. 
+            //  Also, invert, by doing 1 - x. 
+            // According to Tom's thought up algorithm
+
+            //Sum all costs
             float sum = (float)pigCosts.Sum();
 
+            //Divide every cost by the sum and invert
             List<float> cooperationProbabilities = pigCosts
                                             .Select(cost => 1.0f - ((float)cost / (float)sum))
                                             .ToList();
+            //Normalize again
             sum = cooperationProbabilities.Sum();
             cooperationProbabilities = cooperationProbabilities.Select(prob => (prob / sum))
                                     .ToList();
 
+            //Insert a probability of 0 for the movements that were not possible, to always have the same size for the list. 
+            //   Handy to know what move the probability in the resulting List represents, otherwise more difficult.
             cooperationProbabilities = this.InsertImpossibleMovesProbabilities(cooperationProbabilities, availablePositions, position);
 
 
@@ -188,25 +209,53 @@ namespace pig_challenge
             // Position of exits: (x == 1 && y == 4) || (x == 7 && y == 4)
             List<int> exitCosts = availablePositions
                                     .Select(availablePosition => Math.Min(
-                                                map.GetActualPathCost(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(1, 4)).Count),
-                                                map.GetActualPathCost(map.GetPathToGoalPositionFromStartPosition(state, availablePosition, new Position(7, 4)).Count)
+                                                map.GetActualPathCost(
+                                                    map.GetPathToGoalPositionFromStartPosition(
+                                                        state, 
+                                                        availablePosition, 
+                                                        new Position(1, 4))
+                                                        .Count),
+                                                map.GetActualPathCost(
+                                                    map.GetPathToGoalPositionFromStartPosition(
+                                                        state, 
+                                                        availablePosition, 
+                                                        new Position(7, 4))
+                                                        .Count)
                                                 ))
                                     .ToList();
+            //Normalize, by first calculating sum and then divide every one by the sum. 
+            //  Also, invert, by doing 1 - x. 
+            // According to Tom's thought up algorithm
 
+            //Sum all costs
             sum = (float)exitCosts.Sum();
 
+            //Divide every cost by the sum and invert
             List<float> defectProbabilities = exitCosts
                                             .Select(cost => 1.0f - ((float)cost / (float)sum))
                                             .ToList();
+
+            //Normalize again
             sum = defectProbabilities.Sum();
             defectProbabilities = defectProbabilities.Select(prob => (prob / sum))
                                 .ToList();
 
+            //Insert a probability of 0 for the movements that were not possible, to always have the same size for the list. 
+            //   Handy to know what move the probability in the resulting List represents, otherwise more difficult.
             defectProbabilities = this.InsertImpossibleMovesProbabilities(defectProbabilities, availablePositions, position);
 
             return cooperationProbabilities.Concat(defectProbabilities).ToList();
         }
 
+
+        /// <summary>
+        /// Insert a probability of 0 for the movements that were not possible, to always have the same size for the list. 
+        ///   Handy to know what move the probability in the resulting List represents, otherwise more difficult.
+        /// </summary>
+        /// <param name="probabilities"></param>
+        /// <param name="availablePositions"></param>
+        /// <param name="agentPosition"></param>
+        /// <returns></returns>
         private List<float> InsertImpossibleMovesProbabilities(List<float> probabilities, List<Position> availablePositions, Position agentPosition)
         {
             List<Position> cloneAvailablePositions = new List<Position>(availablePositions);

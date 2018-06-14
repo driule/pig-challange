@@ -145,8 +145,12 @@ namespace pig_challenge
             //state.Print();
         }
 
-        // returns a list of all available positions in the agent's vacinity
-        // TODO: possible just use a deterministic list of available positions (there are few in total)
+        /// <summary>
+        /// Get a list of all available positions in the agent's vicinity
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public List<Position> GetAvailablePositions(Position position, State state)
         {
             List<Position> availablePositions = new List<Position>
@@ -157,6 +161,7 @@ namespace pig_challenge
                 new Position( position.X - 1, position.Y)  //Left
             };
 
+            //Filter on actual possibility
             List<Position> possiblePositions = availablePositions.Where(pos =>
             {
                 int x = pos.X;
@@ -164,6 +169,7 @@ namespace pig_challenge
                 return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
             }).ToList();
 
+            //And add the same position as a possibility
             possiblePositions.Add(new Position(position.X, position.Y));     //Same position 
             return possiblePositions;
 
@@ -199,8 +205,15 @@ namespace pig_challenge
             return path;
         }
 
+        /// <summary>
+        /// Get the actual cost of a path, taking into account the fact that a path with cost 0 is actually really expensive, 
+        ///     because there is no possible path
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public int GetActualPathCost(int count)
         {
+            //Randomly chose value of 800
             if (count == 0)
                 return 800;
             else
