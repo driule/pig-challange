@@ -6,17 +6,20 @@ using RoyT.AStar;
 
 namespace pig_challenge
 {
+    struct AgentConfiguration
+    {
+        public float alpha, beta, gamma, delta;
+    }
+
     class Agent : BasicAgent
     {
         private AgentIdentifier Identifier { get; }
-        private float alpha, beta, gamma;
+        private AgentConfiguration configuration;
 
-        public Agent(AgentIdentifier identifier, float alpha, float beta, float gamma) : base()
+        public Agent(AgentIdentifier identifier, AgentConfiguration configuration) : base()
         {
             this.Identifier = identifier;
-            this.alpha = alpha;
-            this.beta = beta;
-            this.gamma = gamma;
+            this.configuration = configuration;
         }
 
         public override void DetermineStep(Map map, State state)
@@ -88,11 +91,13 @@ namespace pig_challenge
             float distanceRatio = (1.0f - ((float)(distanceAToPig + distanceBToPig) / (2.0f * map.maxDistanceToPig)));
             if (distanceRatio < 0.0f)
                 throw new Exception("distance ratio too big, probably maxDistance isn't the actual max");
-            agentCooperationFactor += this.alpha * distanceRatio;
+            agentCooperationFactor += this.configuration.alpha * distanceRatio;
 
-            agentCooperationFactor += this.beta * state.GetCooperationProbability(otherAgentID);
+            agentCooperationFactor += this.configuration.beta * state.GetCooperationProbability(otherAgentID);
 
-            agentCooperationFactor += this.gamma * (float)state.GetScore(otherAgentID) / 25.0f;
+            agentCooperationFactor += this.configuration.gamma * (float)state.GetScore(otherAgentID) / 25.0f;
+
+            agentCooperationFactor += this.configuration.delta;
 
             return agentCooperationFactor;
         }

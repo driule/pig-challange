@@ -21,11 +21,11 @@ namespace pig_challenge
             this.MaxIterations = maxIterations;
         }
 
-        public void Run()
+        public void Run(AgentConfiguration configurationA, AgentConfiguration configurationB)
         {
             for (int i = 0; i < this.NumberOfGames; i++)
             {
-                Game game = new Game(this.MaxIterations);
+                Game game = new Game(this.MaxIterations, configurationA, configurationB);
                 State endState = game.Run();
                 this.scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
             }

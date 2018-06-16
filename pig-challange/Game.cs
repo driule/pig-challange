@@ -23,12 +23,12 @@ namespace pig_challenge
         private Pig pig;
         private Map map;
         
-        public Game(int maxIterations)
+        public Game(int maxIterations, AgentConfiguration configurationA, AgentConfiguration configurationB)
         {
             this.MaxIterations = maxIterations;
 
-            this.agentA = new Agent(BasicAgent.AgentIdentifier.AgentA, 0.2f, 0.5f, 0.3f); 
-            this.agentB = new Agent(BasicAgent.AgentIdentifier.AgentB, 0.2f, 0.5f, 0.3f);
+            this.agentA = new Agent(BasicAgent.AgentIdentifier.AgentA, configurationA); 
+            this.agentB = new Agent(BasicAgent.AgentIdentifier.AgentB, configurationB);
             this.pig = new Pig();
             this.map = new Map();
 

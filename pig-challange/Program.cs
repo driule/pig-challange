@@ -12,8 +12,11 @@ namespace pig_challenge
             Console.WriteLine("Welcome to the pig challenge!");
             Console.WriteLine("Press Enter to start a new tournament.");
 
+            AgentConfiguration agentConfigurationA = new AgentConfiguration { alpha = 0.1f, beta = 0.2f, gamma = 0.3f, delta = 0.4f };
+            AgentConfiguration agentConfigurationB = new AgentConfiguration { alpha = 0.1f, beta = 0.2f, gamma = 0.3f, delta = 0.4f };
+
             Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
-            tournament.Run();
+            tournament.Run(agentConfigurationA, agentConfigurationB);
         }
     }
 }
