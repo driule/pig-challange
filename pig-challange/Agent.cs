@@ -109,16 +109,16 @@ namespace pig_challenge
 
             //If you're already next to the goal, don't move. 
             //  A cost of 1 means the path contains 1 element, which is the case if you're already next to the goal
-            if (orderedZip[0].Item2 <= 1)
-                return new Tuple<Position, int>(position, 0);
-            //Else, do move
-            else 
-                return orderedZip[0];
+            return orderedZip[0];
         }
 
         private Position GetCooperationMove(Map map, State state)
         {
-            return this.GetBestMoveToGoalPosition(map, state, state.GetPosition(AgentIdentifier.Pig)).Item1;
+            Tuple<Position, int> posCostTuple = this.GetBestMoveToGoalPosition(map, state, state.GetPosition(AgentIdentifier.Pig));
+            if (posCostTuple.Item2 <= 1)
+                return state.GetPosition(this.Identifier);
+            else
+                return posCostTuple.Item1;
         }
 
         private Position GetDefectMove(Map map, State state)
