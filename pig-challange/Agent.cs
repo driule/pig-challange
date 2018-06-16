@@ -48,17 +48,30 @@ namespace pig_challenge
             //determine whether we will actually cooperate or not and 
             //  calculate what move we need to do considering our (non-/)cooperation
 
+            Position newPos;
+            if (agentCooperationFactor > 0.75f)
+            {
+                newPos = GetCooperationMove(map, state);
+            }
+            else if (agentCooperationFactor < 0.25f)
+            {
+                newPos = GetDefectMove(map, state);
+            }
+            else if (agentCooperationFactor > randomizer.NextDouble())
+            {
+                newPos = GetCooperationMove(map, state);
+            }
+            else
+            {
+                newPos = GetDefectMove(map, state);
+            }
+
+
             //Position newPos;
-            //if (agentCooperationFactor > 0.5f)
+            //if (agentCooperationFactor > randomizer.NextDouble())
             //    newPos = GetCooperationMove(map, state);
             //else
             //    newPos = GetDefectMove(map, state);
-
-            Position newPos;
-            if (agentCooperationFactor > randomizer.NextDouble())
-                newPos = GetCooperationMove(map, state);
-            else
-                newPos = GetDefectMove(map, state);
 
             return newPos;
         }
