@@ -74,7 +74,7 @@ namespace pig_challenge
                 }
 
                 this.map.Draw(i + 1, this.state);
-                Console.ReadLine();
+                //Console.ReadLine();
             }
 
             throw new Exception("the game end check didn't fire successfully");

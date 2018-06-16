@@ -4,7 +4,7 @@ namespace pig_challenge
 {
     class Program
     {
-        const int NUM_GAMES = 1;
+        const int NUM_GAMES = 100;
         const int MAX_ITERATIONS = 25;
 
         static void Main(string[] args)

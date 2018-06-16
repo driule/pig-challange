@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using RoyT.AStar;
 
 namespace pig_challenge
@@ -10,14 +11,12 @@ namespace pig_challenge
         private AgentIdentifier Identifier { get; }
         private float alpha, beta, gamma;
 
-        public Agent(AgentIdentifier identifier, float alpha, float beta, float gamma)
+        public Agent(AgentIdentifier identifier, float alpha, float beta, float gamma) : base()
         {
             this.Identifier = identifier;
             this.alpha = alpha;
             this.beta = beta;
             this.gamma = gamma;
-
-            this.randomizer = new Random();
         }
 
         public override void DetermineStep(Map map, State state)
@@ -57,7 +56,7 @@ namespace pig_challenge
             {
                 newPos = GetDefectMove(map, state);
             }
-            else if (agentCooperationFactor > randomizer.NextDouble())
+            else if (agentCooperationFactor > this.GetRandomDouble())
             {
                 newPos = GetCooperationMove(map, state);
             }
@@ -68,7 +67,7 @@ namespace pig_challenge
 
 
             //Position newPos;
-            //if (agentCooperationFactor > randomizer.NextDouble())
+            //if (agentCooperationFactor > this.GetRandomDouble())
             //    newPos = GetCooperationMove(map, state);
             //else
             //    newPos = GetDefectMove(map, state);

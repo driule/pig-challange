@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using RoyT.AStar;
 
 namespace pig_challenge
@@ -14,11 +15,11 @@ namespace pig_challenge
             Exit = 2
         }
 
+        RNGCryptoServiceProvider randomizer;
+
         public float maxDistanceToPig = 9.0f;
         // Create a new grid and let each cell have a default traversal cost of 1.0
         private Grid grid;
-
-        private Random randomizer;
 
         public Map()
         {
@@ -46,7 +47,7 @@ namespace pig_challenge
             this.grid.BlockCell(new Position(5, 3));
             this.grid.BlockCell(new Position(5, 5));
 
-            this.randomizer = new Random();
+            this.randomizer = new RNGCryptoServiceProvider();
         }
 
         public bool IsCellExit(int x, int y)
@@ -91,11 +92,12 @@ namespace pig_challenge
         // unpredictable: find all suitable positions and randomly select one
         public Position GetRandomStartPosition(State state)
         {
+            byte[] byteArray = new byte[4];
             int x = 0, y = 0;
             while (true)
             {
-                x = this.randomizer.Next(2, 6);
-                y = this.randomizer.Next(2, 6);
+                x = this.GetRandomInt(2, 6, byteArray);
+                y = this.GetRandomInt(2, 6, byteArray);
 
                 if (!this.IsCellEmpty(x, y, state))
                 {
@@ -110,6 +112,7 @@ namespace pig_challenge
 
         public void Draw(int iteration, State state)
         {
+            return;
             Console.WriteLine($"Iteration {iteration}");
             for (int y = 0; y < 9; y++)
             {
@@ -205,6 +208,9 @@ namespace pig_challenge
             return path;
         }
 
+
+
+
         /// <summary>
         /// Get the actual cost of a path, taking into account the fact that a path with cost 0 is actually really expensive, 
         ///     because there is no possible path
@@ -218,6 +224,14 @@ namespace pig_challenge
                 return 800;
             else
                 return (int)Math.Pow(count, 2);
+        }
+
+        protected int GetRandomInt(int inclBegin, int exclEnd, byte[] byteArray)
+        {
+            this.randomizer.GetBytes(byteArray);
+            uint randomInt = BitConverter.ToUInt32(byteArray, 0);
+
+            return (int)(inclBegin + (randomInt % (exclEnd - inclBegin + 1)));
         }
     }
 }

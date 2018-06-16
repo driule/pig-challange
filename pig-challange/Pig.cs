@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using RoyT.AStar;
 
 namespace pig_challenge
 {
     class Pig : BasicAgent
     {
-        public Pig()
+        public Pig() : base()
         {
-            this.randomizer = new Random();
         }
 
         public override void DetermineStep(Map map, State state)
@@ -19,7 +19,7 @@ namespace pig_challenge
             // determine all available adjacent positions
             List<Position> positions = map.GetAvailablePositions(position, state);
 
-            foreach(Position pos in positions)
+            foreach (Position pos in positions)
             {
                 if (map.IsCellExit(pos.X, pos.Y) || pos == position)
                 {
@@ -29,7 +29,7 @@ namespace pig_challenge
             }
 
             // get a random new position
-            Position newPosition = (positions.Count() > 0) ? positions[this.randomizer.Next(0, positions.Count() - 1)] : position;
+            Position newPosition = (positions.Count() > 0) ? positions[this.GetRandomInt(0, positions.Count() - 1)] : position;
 
             // analyse the gamestate and board to determine if the pig is capturable form its new position
             this.DetermineIsPigCapturable(map, state, newPosition);
