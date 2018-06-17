@@ -10,10 +10,10 @@ namespace pig_challenge
     {
         public float alpha, beta, gamma, delta;
 
-        // minimum probability limit when agent cooperates for sure
+        // minimum cooperation probability limit when agent cooperates for sure
         public float minCooperationLimit;
 
-        // maximum probability limit when agent defects for sure
+        // maximum cooperation probability limit when agent defects for sure
         public float maxDefectLimit;
     }
 
