@@ -69,7 +69,7 @@ namespace pig_challenge
         /// <param name="state"></param>
         /// <param name="agentId"></param>
         /// <returns></returns>
-        public List<float> GetMovesConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier agentId)
+        private List<float> GetMovesConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier agentId)
         {
             Position agentPosition = state.GetAgentPosition(agentId);
 

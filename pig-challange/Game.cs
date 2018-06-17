@@ -78,7 +78,7 @@ namespace pig_challenge
                 Console.ReadLine();
             }
 
-            throw new Exception("the game end check didn't fire successfully");
+            throw new Exception("The game end check didn't fire successfully");
         }
 
         private void EvaluateGameState()
