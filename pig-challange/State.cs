@@ -120,7 +120,7 @@ namespace pig_challenge
             }
         }
 
-        public Position GetPosition(BasicAgent.AgentIdentifier identifier)
+        public Position GetAgentPosition(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier) {
                 case BasicAgent.AgentIdentifier.AgentA: return this.PositionAgentA;
@@ -129,7 +129,7 @@ namespace pig_challenge
             }
         }
 
-        public Position GetPrevPosition(BasicAgent.AgentIdentifier identifier)
+        public Position GetPrevAgentPosition(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier)
             {
@@ -139,7 +139,7 @@ namespace pig_challenge
             }
         }
 
-        public float GetCooperationProbability(BasicAgent.AgentIdentifier identifier)
+        public float GetAgentCooperationProbability(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier)
             {
@@ -149,7 +149,7 @@ namespace pig_challenge
             }
         }
 
-        public int GetScore(BasicAgent.AgentIdentifier identifier)
+        public int GetAgentScore(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier)
             {

@@ -8,6 +8,8 @@ namespace pig_challenge
 {
     class Map
     {
+        const int MAX_COST = 999;
+
         public enum CellType
         {
             Empty = 0,
@@ -112,7 +114,7 @@ namespace pig_challenge
 
         public void Draw(int iteration, State state)
         {
-            return;
+            //return;
             Console.WriteLine($"Iteration {iteration}");
             for (int y = 0; y < 9; y++)
             {
@@ -154,48 +156,50 @@ namespace pig_challenge
         /// <param name="position"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public List<Position> GetAvailablePositions(Position position, State state)
+        public List<Position> GetAvailablePositions(Position currentAgentPosition, State state)
         {
             List<Position> availablePositions = new List<Position>
             {
-                new Position( position.X, position.Y - 1), //Up
-                new Position( position.X + 1, position.Y), //Right
-                new Position( position.X, position.Y + 1), //Down
-                new Position( position.X - 1, position.Y)  //Left
+                new Position(currentAgentPosition.X, currentAgentPosition.Y - 1), // up
+                new Position(currentAgentPosition.X + 1, currentAgentPosition.Y), // right
+                new Position(currentAgentPosition.X, currentAgentPosition.Y + 1), // pown
+                new Position(currentAgentPosition.X - 1, currentAgentPosition.Y)  // left
             };
 
-            //Filter on actual possibility
-            List<Position> possiblePositions = availablePositions.Where(pos =>
-            {
-                int x = pos.X;
-                int y = pos.Y;
-                return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
-            }).ToList();
+            // filter on actual possibility
+            List<Position> possiblePositions = availablePositions.Where(
+                pos =>
+                {
+                    int x = pos.X;
+                    int y = pos.Y;
 
-            //And add the same position as a possibility
-            possiblePositions.Add(new Position(position.X, position.Y));     //Same position 
+                    return x >= 0 && y >= 0 && x < 9 && y < 9 && this.IsCellEmpty(x, y, state);
+                }
+            ).ToList();
+
+            possiblePositions.Add(new Position(currentAgentPosition.X, currentAgentPosition.Y));
+
             return possiblePositions;
-
         }
 
         public IList<Position> GetPathToPig(BasicAgent.AgentIdentifier agentId, State state)
         {
-            Position currentAgentPosition = state.GetPosition(agentId);
+            Position currentAgentPosition = state.GetAgentPosition(agentId);
 
             return GetPathToPigFromPosition(state, currentAgentPosition);
         }
 
         public IList<Position> GetPathToPigFromPosition(State state, Position position)
         { 
-            Position pigPosition = state.GetPosition(BasicAgent.AgentIdentifier.Pig);
+            Position pigPosition = state.GetAgentPosition(BasicAgent.AgentIdentifier.Pig);
 
             return GetPathToGoalPositionFromStartPosition(state, position, pigPosition);
         }
 
         public IList<Position> GetPathToGoalPositionFromStartPosition(State state, Position startPosition, Position goalPosition)
         {
-            Position agentAPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentA);
-            Position agentBPosition = state.GetPosition(BasicAgent.AgentIdentifier.AgentB);
+            Position agentAPosition = state.GetAgentPosition(BasicAgent.AgentIdentifier.AgentA);
+            Position agentBPosition = state.GetAgentPosition(BasicAgent.AgentIdentifier.AgentB);
 
             this.grid.BlockCell(agentAPosition);
             this.grid.BlockCell(agentBPosition);
@@ -208,9 +212,6 @@ namespace pig_challenge
             return path;
         }
 
-
-
-
         /// <summary>
         /// Get the actual cost of a path, taking into account the fact that a path with cost 0 is actually really expensive, 
         ///     because there is no possible path
@@ -219,11 +220,14 @@ namespace pig_challenge
         /// <returns></returns>
         public int GetActualPathCost(int count)
         {
-            //Randomly chose value of 800
             if (count == 0)
-                return 800;
+            {
+                return MAX_COST;
+            }
             else
+            {
                 return (int)Math.Pow(count, 2);
+            }
         }
 
         protected int GetRandomInt(int inclBegin, int exclEnd, byte[] byteArray)
