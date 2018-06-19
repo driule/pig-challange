@@ -75,7 +75,9 @@ namespace pig_challenge
                 }
 
                 this.map.Draw(i + 1, this.state);
-                //Console.ReadLine();
+
+                if (Program.PRINT_DEBUG_INFO)
+                    Console.ReadLine();
             }
 
             throw new Exception("The game end check didn't fire successfully");
@@ -87,6 +89,9 @@ namespace pig_challenge
 
             this.agentA.configuration.initialCooperationGuess = state.CooperationProbabilityGuessA;
             this.agentB.configuration.initialCooperationGuess = state.CooperationProbabilityGuessB;
+
+            if (Program.PRINT_DEBUG_INFO)
+                Console.ReadLine();
         }
 
         private void EvaluateGameState()

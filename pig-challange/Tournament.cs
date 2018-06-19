@@ -35,17 +35,23 @@ namespace pig_challenge
                 this.scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
             }
 
-            //Console.WriteLine("Scores for the two agents:");
+            if (Program.PRINT_DEBUG_INFO)
+                Console.WriteLine("Scores for the two agents:");
             for (int i = 0; i < this.NumberOfGames; i++)
             {
-                //Console.WriteLine($" Agent A: {this.scoreList[i][0]}, Agent B: {this.scoreList[i][1]}");
+                if (Program.PRINT_DEBUG_INFO)
+                    Console.WriteLine($" Agent A: {this.scoreList[i][0]}, Agent B: {this.scoreList[i][1]}");
                 this.totalScoreAgentA += this.scoreList[i][0];
                 this.totalScoreAgentB += this.scoreList[i][1];
             }
-            //Console.WriteLine($"Total scores: \n Agent A: {this.totalScoreAgentA}, Agent B: {this.totalScoreAgentB}");
+
+            if (Program.PRINT_DEBUG_INFO)
+                Console.WriteLine($"Total scores: \n Agent A: {this.totalScoreAgentA}, Agent B: {this.totalScoreAgentB}");
+
+            if (Program.PRINT_DEBUG_INFO)
+                Console.ReadLine();
 
             return new Result { scoreA = this.totalScoreAgentA, scoreB = this.totalScoreAgentB };
-            //Console.ReadLine();
         }
     }
 }

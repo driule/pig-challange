@@ -114,7 +114,9 @@ namespace pig_challenge
 
         public void Draw(int iteration, State state)
         {
-            return;
+            if (!Program.PRINT_DEBUG_INFO)
+                return;
+
             Console.WriteLine($"Iteration {iteration}");
             for (int y = 0; y < 9; y++)
             {

@@ -8,6 +8,8 @@ namespace pig_challenge
 {
     class Program
     {
+        public const bool PRINT_DEBUG_INFO = true;
+
         const int NUM_GAMES = 10;
         const int MAX_ITERATIONS = 25;
 
@@ -19,7 +21,10 @@ namespace pig_challenge
             Console.WriteLine("Welcome to the pig challenge!");
             Console.WriteLine("Press Enter to start a new tournament.");
 
-            RunForRandomConfigurations(floatArray);
+            if (PRINT_DEBUG_INFO)
+                RunDemo();
+            else
+                RunForRandomConfigurations(floatArray);
 
             Console.ReadLine();
             
@@ -57,6 +62,15 @@ namespace pig_challenge
                                             count++;
                                         }
                         }
+        }
+
+        static void RunDemo()
+        {
+            AgentConfiguration agentConfigurationA = new AgentConfiguration(0.3f, 0.3f, 0.3f, 0.1f, 0.75f, 0.25f, 0.5f, true);
+            AgentConfiguration agentConfigurationB = new AgentConfiguration(0.3f, 0.3f, 0.3f, 0.1f, 0.75f, 0.25f, 0.5f, true);
+
+            Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
+            Result res = tournament.Run(agentConfigurationA, agentConfigurationB);
         }
 
         static void RunForRandomConfigurations(float[,] floatArray)
