@@ -87,8 +87,8 @@ namespace pig_challenge
         {
             this.map.Draw(iteration, this.state);
 
-            this.agentA.configuration.initialCooperationGuess = state.CooperationProbabilityGuessA;
-            this.agentB.configuration.initialCooperationGuess = state.CooperationProbabilityGuessB;
+            this.agentA.configuration.initialCooperationGuess = 0.5f * this.agentA.configuration.initialCooperationGuess + 0.5f * state.CooperationProbabilityGuessA;
+            this.agentB.configuration.initialCooperationGuess = 0.5f * this.agentB.configuration.initialCooperationGuess + 0.5f * state.CooperationProbabilityGuessB;
 
             if (Program.PRINT_DEBUG_INFO)
                 Console.ReadLine();
