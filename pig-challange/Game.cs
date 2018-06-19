@@ -1,5 +1,4 @@
-﻿using RoyT.AStar;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,14 +8,15 @@ namespace pig_challenge
     {
         private int MaxIterations;
         private State state;
+        private PredictionModel PredictionModel;
         
         public enum ExitCodes
         {
             InProgress = -1,
-            IterationsExceeded = 3,
             AgentAQuit = 0,
             AgentBQuit = 1,
-            PigCaught = 2
+            PigCaught = 2,
+            IterationsExceeded = 3
         }
 
         private Agent agentA, agentB;
@@ -33,18 +33,19 @@ namespace pig_challenge
             this.map = new Map();
 
             this.state = new State(this.MaxIterations);
-            state.PlaceAgents(this.map);
+            this.state.PlaceAgents(this.map);
+            this.PredictionModel = new PredictionModel();
         }
 
         public State Run()
         {
-            List<float> tempPCM_Matrix;
+            List<float> cooperationConditionalProbabilities;
             this.map.Draw(0, this.state);
             for (int i = 0; i < this.MaxIterations; i++)
             {
-                tempPCM_Matrix = this.GetPCMConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentA);
+                cooperationConditionalProbabilities = this.PredictionModel.GetCooperationConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentA);
                 this.agentA.DetermineStep(this.map, this.state);
-                this.CalculateAndUpdateCooperationPrior(state, tempPCM_Matrix, BasicAgent.AgentIdentifier.AgentA);
+                this.PredictionModel.CalculateAndUpdateCooperationPrior(state, cooperationConditionalProbabilities, BasicAgent.AgentIdentifier.AgentA);
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
@@ -53,9 +54,9 @@ namespace pig_challenge
                     return this.state;
                 }
 
-                tempPCM_Matrix = this.GetPCMConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentB);
+                cooperationConditionalProbabilities = this.PredictionModel.GetCooperationConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentB);
                 this.agentB.DetermineStep(this.map, this.state);
-                this.CalculateAndUpdateCooperationPrior(state, tempPCM_Matrix, BasicAgent.AgentIdentifier.AgentB);
+                this.PredictionModel.CalculateAndUpdateCooperationPrior(state, cooperationConditionalProbabilities, BasicAgent.AgentIdentifier.AgentB);
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
@@ -77,7 +78,7 @@ namespace pig_challenge
                 //Console.ReadLine();
             }
 
-            throw new Exception("the game end check didn't fire successfully");
+            throw new Exception("The game end check didn't fire successfully");
         }
 
         private void EvaluateGameState()
@@ -104,244 +105,6 @@ namespace pig_challenge
             if (this.state.TurnsLeft == 0)
             {
                 this.state.SetOutOfTurns();
-            }
-        }
-
-
-        private void CalculateConditionalProbabilities(BasicAgent.AgentIdentifier id)
-        {
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name=""></param>
-        /// <returns></returns>
-        public List<float> GetPCMConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier id)
-        {
-            //First call GetPMCConditionalPropabilities and GetCooperationPrior, then calculate for all m and all c: P(m|c) * P(c), put them in a temporary list. 
-            //  Then calculate over all m and all c: P(c|m) = ( P(m|c) * P(c)) / SUM_C( P(m|i)*P(i) ). So only bottom half really needs to be calculated and 
-            //  we use the precalculated ones from the list created.
-
-            //Get the PMCs, which are in P(m1|0),.. P(m5|0), P(m1|1) order 
-            List<float> PMCs = this.GetPMCConditionalProbabilities(map, state, id);
-            float cooperationProbability = state.GetCooperationProbability(id);
-
-            //Precalculated bottom parts
-            List<float> precalculatedPmiXPi = PMCs.Select((PMC, index) =>
-            {
-                //This switch accounts for the fact that the first 5 elements are PMC and 
-                //   last 5 are PMnotC, with notC being 1 - C
-                if (index <= 4)
-                    return PMC * cooperationProbability;
-                else //index > 5, so we need to use P(-c) 
-                    return PMC * (1.0f - cooperationProbability);
-            }).ToList();
-
-
-            List<float> PCMs = PMCs.Select((PMC, index) =>
-            {
-                //We won't use this prob. because it's unavailable or no path to goal, so really bad and thus 0.0f is perfect.
-                if (PMC == 0.0f)
-                    return 0.0f;
-
-                //This is a really unreadable way to get both indices of precalculated value, for one movement and two C's:
-                //  C and not C. We need those two, because we sum over both possible C's. They are located at 0&4, 1&5,...
-                int div = index / 5; //0..4=>0, 5..9=>1
-                int mulFactor = (1 - 2 * div); // 0=>1, 1=>-1
-                int otherIndex = mulFactor * 5 + index; // results in: index of 0 <=> 5, 1 <=> 6
-                //Calculate PCM
-                return precalculatedPmiXPi[index] / (precalculatedPmiXPi[index] + precalculatedPmiXPi[otherIndex]);
-            }).ToList();
-
-            //Calculate P(m) by going over all SUM_C( P(m|i) * P(i) ) //TODO: smartly
-
-            return PCMs;
-        }
-
-        /// <summary>
-        /// Returns Conditional probabilities in P(m1|0),.. P(m5|0), P(m1|1) order 
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="state"></param>
-        /// <returns></returns>
-        public List<float> GetPMCConditionalProbabilities(Map map, State state, BasicAgent.AgentIdentifier id)
-        {
-            Position position = state.GetPosition(id);
-
-            List<Position> availablePositions = map.GetAvailablePositions(position, state);
-
-            //This calculates the amount of steps until the position of the pig is reached, so we could subtract 1 to get to the position just before the pig
-            //Basically, I actually wanted to calculate from the availablePosition to next to the pig, and then add 1 tot the total,
-            //  but the GetPath method actually includes the startPosition in the path, so the +1 is not needed.
-            List<int> pigCosts = availablePositions
-                                    .Select(availablePosition => 
-                                                map.GetActualPathCost(
-                                                    map.GetPathToPigFromPosition(state, availablePosition)
-                                                            .Count))
-                                    .ToList();
-
-            //Normalize, by first calculating sum and then divide every one by the sum. 
-            //  Also, invert, by doing 1 - x. 
-            // According to Tom's thought up algorithm
-
-            //Sum all costs
-            float sum = (float)pigCosts.Sum();
-
-            //Divide every cost by the sum and invert
-            List<float> cooperationProbabilities = pigCosts
-                                            .Select(cost => 1.0f - ((float)cost / (float)sum))
-                                            .ToList();
-            //Normalize again
-            sum = cooperationProbabilities.Sum();
-            cooperationProbabilities = cooperationProbabilities.Select(prob => (prob / sum))
-                                    .ToList();
-
-            //Insert a probability of 0 for the movements that were not possible, to always have the same size for the list. 
-            //   Handy to know what move the probability in the resulting List represents, otherwise more difficult.
-            cooperationProbabilities = this.InsertImpossibleMovesProbabilities(cooperationProbabilities, availablePositions, position);
-
-
-
-            //Now we need to do the same for the exits, but now we take the minimum of the two lengths of the paths
-            // Position of exits: (x == 1 && y == 4) || (x == 7 && y == 4)
-            List<int> exitCosts = availablePositions
-                                    .Select(availablePosition => Math.Min(
-                                                map.GetActualPathCost(
-                                                    map.GetPathToGoalPositionFromStartPosition(
-                                                        state, 
-                                                        availablePosition, 
-                                                        new Position(1, 4))
-                                                        .Count),
-                                                map.GetActualPathCost(
-                                                    map.GetPathToGoalPositionFromStartPosition(
-                                                        state, 
-                                                        availablePosition, 
-                                                        new Position(7, 4))
-                                                        .Count)
-                                                ))
-                                    .ToList();
-            //Normalize, by first calculating sum and then divide every one by the sum. 
-            //  Also, invert, by doing 1 - x. 
-            // According to Tom's thought up algorithm
-
-            //Sum all costs
-            sum = (float)exitCosts.Sum();
-
-            //Divide every cost by the sum and invert
-            List<float> defectProbabilities = exitCosts
-                                            .Select(cost => 1.0f - ((float)cost / (float)sum))
-                                            .ToList();
-
-            //Normalize again
-            sum = defectProbabilities.Sum();
-            defectProbabilities = defectProbabilities.Select(prob => (prob / sum))
-                                .ToList();
-
-            //Insert a probability of 0 for the movements that were not possible, to always have the same size for the list. 
-            //   Handy to know what move the probability in the resulting List represents, otherwise more difficult.
-            defectProbabilities = this.InsertImpossibleMovesProbabilities(defectProbabilities, availablePositions, position);
-
-            return cooperationProbabilities.Concat(defectProbabilities).ToList();
-        }
-
-
-        /// <summary>
-        /// Insert a probability of 0 for the movements that were not possible, to always have the same size for the list. 
-        ///   Handy to know what move the probability in the resulting List represents, otherwise more difficult.
-        /// </summary>
-        /// <param name="probabilities"></param>
-        /// <param name="availablePositions"></param>
-        /// <param name="agentPosition"></param>
-        /// <returns></returns>
-        private List<float> InsertImpossibleMovesProbabilities(List<float> probabilities, List<Position> availablePositions, Position agentPosition)
-        {
-            List<Position> cloneAvailablePositions = new List<Position>(availablePositions);
-            List<Position> potentialPositions = new List<Position>
-            {
-                new Position( agentPosition.X,      agentPosition.Y - 1), //Up
-                new Position( agentPosition.X + 1,  agentPosition.Y), //Right
-                new Position( agentPosition.X,      agentPosition.Y + 1), //Down
-                new Position( agentPosition.X - 1,  agentPosition.Y)  //Left
-            };
-            //Standing still is always added
-            for (int i = 0; i < 4; i++)
-            {
-                if(cloneAvailablePositions[i] != potentialPositions[i])
-                {
-                    cloneAvailablePositions.Insert(i, potentialPositions[i]);
-                    probabilities.Insert(i, 0.0f);
-                }
-            }
-
-            return probabilities;
-        }
-
-        private void CalculateAndUpdateCooperationPrior(State state, List<float> PCMs, BasicAgent.AgentIdentifier id)
-        {
-            //WRONG return state.GetCooperationProbability(id);
-            //Use conditional probability matrix from state to get the probability of cooperation from last turn. 
-            // Or when it's the first turn, use the prior?
-
-            Position pos = state.GetPosition(id);
-            Position prevPos = state.GetPrevPosition(id);
-
-            for(int i = 0; i < 5; i++)
-            {
-                if (PCMs[i] != 0.0f && PCMs[i + 5] != 0.0f && Math.Abs(1.0f - PCMs[i] - PCMs[i + 5]) > 0.01f)
-                    throw new Exception("AHH INVALID PCMs");
-            }
-
-            //TODO: CHECK IF PCM[0] == 1 - PCM[5], P(C|m1) == 1 - P(-C|m1), this should be the case!
-            //Switch based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
-            //For this, we do need a fixed size of the PMC list, so all moves need to be represented
-            state.UpdateCooperationProbability(id, PCMs[this.GetMoveCode(pos, prevPos)]);
-        }
-
-        /// <summary>
-        /// Return move code based on previous movement, up = 0, right = 1, down = 2, left = 3, same = 4
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="prevPos"></param>
-        /// <returns></returns>
-        private int GetMoveCode(Position pos, Position prevPos)
-        {
-            Position diff = pos - prevPos;
-
-            //Vertical movement
-            if (diff.X == 0)
-            {
-                //Up
-                if(diff.Y < 0)
-                {
-                    return 0;
-                }
-                //Down
-                else if(diff.Y > 0)
-                {
-                    return 2;
-                }
-                //Same position
-                else
-                {
-                    return 4;
-                }
-            }
-            //Horizontal movement
-            else
-            {
-                //Left
-                if(diff.X < 0)
-                {
-                    return 3;
-                }
-                //Right
-                else
-                {
-                    return 1;
-                }
             }
         }
     }

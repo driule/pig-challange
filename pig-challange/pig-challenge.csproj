@@ -102,6 +102,7 @@
     <Compile Include="Agent.cs" />
     <Compile Include="BasicAgent.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="PredictionModel.cs" />
     <Compile Include="State.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Pig.cs" />
