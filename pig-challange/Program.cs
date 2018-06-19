@@ -62,8 +62,6 @@ namespace pig_challenge
             var csv = new StringBuilder();
             //Stopwatch stopwatch = new Stopwatch();
 
-            float[] valuesA = new float[4], valuesB = new float[4];
-
             int count = 0;
             for(int i = 0; i < 81796; i++)
             {
@@ -78,7 +76,8 @@ namespace pig_challenge
                 AgentConfiguration agentConfigurationB = new AgentConfiguration { alpha = floatArray[i, 4], beta = floatArray[i, 5], gamma = floatArray[i, 6], delta = floatArray[i, 7], minCooperationLimit = 0.75f, maxDefectLimit = 0.25f };
 
                 Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
-                csv.AppendLine($"Configuration A: {valuesA[0]}, {valuesA[1]}, {valuesA[2]}, {valuesA[3]} \n Configuration B: {valuesB[0]}, {valuesB[1]}, {valuesB[2]}, {valuesB[3]} ");
+                csv.AppendLine($"Configuration A: {floatArray[i, 0]}, {floatArray[i, 1]}, {floatArray[i, 2]}, {floatArray[i, 3]} \n " +
+                    $"Configuration B: {floatArray[i, 4]}, {floatArray[i, 5]}, {floatArray[i, 6]}, {floatArray[i, 7]} ");
                 Result res = tournament.Run(agentConfigurationA, agentConfigurationB);
                 csv.AppendLine($"Total scores: \n Agent A: {res.scoreA}, Agent B: {res.scoreB}");
 
