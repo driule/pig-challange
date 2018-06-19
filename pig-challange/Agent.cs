@@ -28,18 +28,12 @@ namespace pig_challenge
             this.configuration = configuration;
         }
 
+        // determine whether we will actually cooperate or not and 
+        // calculate what move we need to do considering our (non-/)cooperation
         public override void DetermineStep(Map map, State state)
         {
-            state.MoveAgent(this.Identifier, this.DecideMove(map, state));
-        }
-
-        public Position DecideMove(Map map, State state)
-        {
             float agentCooperationFactor = this.CalculateAgentCooperationFactor(map, state);
-
-            // determine whether we will actually cooperate or not and 
-            // calculate what move we need to do considering our (non-/)cooperation
-
+            
             Position newAgentPosition;
             if (agentCooperationFactor > this.configuration.minCooperationLimit)
             {
@@ -58,7 +52,7 @@ namespace pig_challenge
                 newAgentPosition = GetDefectMove(map, state);
             }
 
-            return newAgentPosition;
+            state.MoveAgent(this.Identifier, newAgentPosition);
         }
 
         private float CalculateAgentCooperationFactor(Map map, State state)

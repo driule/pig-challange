@@ -24,7 +24,7 @@ namespace pig_challenge
             float cooperationProbability = state.GetAgentCooperationProbability(agentId);
 
             // precalculated bottom parts
-            List<float> precalculatedMoveConditionalProbabilitiesSum = movesCondintionalProbabilities.Select((moveConditionalProbability, index) =>
+            List<float> precalculatedMoveConditionalProbabilities = movesCondintionalProbabilities.Select((moveConditionalProbability, index) =>
             {
                 // this switch accounts for the fact that the first 5 elements are PMC and 
                 // last 5 are PMnotC, with notC being 1 - C
@@ -47,14 +47,19 @@ namespace pig_challenge
                     return 0.0f;
                 }
 
-                // this is a really unreadable way to get both indices of precalculated value, for one movement and two C's:
+                //get both indices of precalculated value, for one movement and two C's:
                 // C and not C. We need those two, because we sum over both possible C's. They are located at 0&4, 1&5,...
-                int div = index / 5; // 0..4 => 0, 5..9 => 1
-                int mulFactor = (1 - 2 * div); // 0 => 1, 1 => -1
-                int otherIndex = mulFactor * 5 + index; // results in: index of 0 <=> 5, 1 <=> 6
-
-                // calculate PCM
-                return precalculatedMoveConditionalProbabilitiesSum[index] / (precalculatedMoveConditionalProbabilitiesSum[index] + precalculatedMoveConditionalProbabilitiesSum[otherIndex]);
+                if (index <= 4)
+                {
+                    return precalculatedMoveConditionalProbabilities[index]
+                        / (precalculatedMoveConditionalProbabilities[index] + precalculatedMoveConditionalProbabilities[index + 5]);
+                }
+                else
+                {
+                    //index > 5, so we need to use P(-c) 
+                    return precalculatedMoveConditionalProbabilities[index]
+                        / (precalculatedMoveConditionalProbabilities[index] + precalculatedMoveConditionalProbabilities[index - 5]);
+                }
             }).ToList();
 
             // calculate P(m) by going over all SUM_C( P(m|i) * P(i) ) //TODO: smartly
