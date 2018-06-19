@@ -23,7 +23,7 @@ namespace pig_challenge
         private Pig pig;
         private Map map;
         
-        public Game(int maxIterations, AgentConfiguration configurationA, AgentConfiguration configurationB)
+        public Game(int maxIterations, AgentConfiguration configurationA, AgentConfiguration configurationB )
         {
             this.MaxIterations = maxIterations;
 
@@ -32,7 +32,7 @@ namespace pig_challenge
             this.pig = new Pig();
             this.map = new Map();
 
-            this.state = new State(this.MaxIterations);
+            this.state = new State(this.MaxIterations, configurationA, configurationB);
             this.state.PlaceAgents(this.map);
             this.PredictionModel = new PredictionModel();
         }
@@ -49,7 +49,7 @@ namespace pig_challenge
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
-                    this.map.Draw(i + 1, this.state);
+                    this.Finish(i + 1, state);
 
                     return this.state;
                 }
@@ -60,7 +60,7 @@ namespace pig_challenge
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
-                    this.map.Draw(i + 1, this.state);
+                    this.Finish(i + 1, state);
 
                     return this.state;
                 }
@@ -69,7 +69,7 @@ namespace pig_challenge
                 this.EvaluateGameState();
                 if (this.state.ExitCode != Game.ExitCodes.InProgress)
                 {
-                    this.map.Draw(i + 1, this.state);
+                    this.Finish(i + 1, state);
 
                     return this.state;
                 }
@@ -79,6 +79,14 @@ namespace pig_challenge
             }
 
             throw new Exception("The game end check didn't fire successfully");
+        }
+
+        private void Finish(int iteration, State state)
+        {
+            this.map.Draw(iteration, this.state);
+
+            this.agentA.configuration.initialCooperationGuess = state.CooperationProbabilityGuessA;
+            this.agentB.configuration.initialCooperationGuess = state.CooperationProbabilityGuessB;
         }
 
         private void EvaluateGameState()

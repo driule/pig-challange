@@ -21,7 +21,7 @@ namespace pig_challenge
 
             // get the PMCs, which are in P(m1|0),.. P(m5|0), P(m1|1) order 
             List<float> movesCondintionalProbabilities = this.GetMovesConditionalProbabilities(map, state, agentId);
-            float cooperationProbability = state.GetAgentCooperationProbability(agentId);
+            float cooperationProbability = state.GetCooperationProbabilityGuess(agentId);
 
             // precalculated bottom parts
             List<float> precalculatedMoveConditionalProbabilities = movesCondintionalProbabilities.Select((moveConditionalProbability, index) =>

@@ -80,8 +80,8 @@ namespace pig_challenge
                     //stopwatch.Start();
 
 
-                    AgentConfiguration agentConfigurationA = new AgentConfiguration { alpha = floatArray[i, 0], beta = floatArray[i, 1], gamma = floatArray[i, 2], delta = floatArray[i, 3], minCooperationLimit = 0.75f, maxDefectLimit = 0.25f };
-                    AgentConfiguration agentConfigurationB = new AgentConfiguration { alpha = floatArray[i, 4], beta = floatArray[i, 5], gamma = floatArray[i, 6], delta = floatArray[i, 7], minCooperationLimit = 0.75f, maxDefectLimit = 0.25f };
+                    AgentConfiguration agentConfigurationA = new AgentConfiguration(floatArray[i, 0], floatArray[i, 1], floatArray[i, 2], floatArray[i, 3], 0.75f, 0.25f, 0.5f, true );
+                    AgentConfiguration agentConfigurationB = new AgentConfiguration(floatArray[i, 4], floatArray[i, 5], floatArray[i, 6], floatArray[i, 7], 0.75f, 0.25f, 0.5f, true );
 
                     Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
                     csv.AppendLine($"Configuration A: {floatArray[i, 0]}, {floatArray[i, 1]}, {floatArray[i, 2]}, {floatArray[i, 3]} \n " +

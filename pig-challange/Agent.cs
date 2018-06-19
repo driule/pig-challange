@@ -6,21 +6,45 @@ using RoyT.AStar;
 
 namespace pig_challenge
 {
-    struct AgentConfiguration
+    public class AgentConfiguration
     {
-        public float alpha, beta, gamma, delta;
+        public const float DEFAULT_INITIAL_GUESS = 0.5f; 
+
+        public float alpha { get; }
+        public float beta { get; }
+        public float gamma { get; }
+        public float delta { get; }
 
         // minimum cooperation probability limit when agent cooperates for sure
-        public float minCooperationLimit;
+        public float minCooperationLimit { get; }
 
         // maximum cooperation probability limit when agent defects for sure
-        public float maxDefectLimit;
+        public float maxDefectLimit { get; }
+
+        // the previous predicted cooperation for this agent, so the other agent's prediction of this agent
+        //  And another variable to store whether we will pass the cooperation probability between games
+        public float initialCooperationGuess { get; set; }
+        public bool useCooperationHistory { get; }
+
+        public AgentConfiguration(float alpha, float beta, float gamma, float delta, float minCooperationLimit, float maxDefectLimit, float initialCooperationGuess, bool useCooperationHistory)
+        {
+            this.alpha = alpha;
+            this.beta = beta;
+            this.gamma = gamma;
+            this.delta = delta;
+
+            this.minCooperationLimit = minCooperationLimit;
+            this.maxDefectLimit = maxDefectLimit;
+
+            this.initialCooperationGuess = initialCooperationGuess;
+            this.useCooperationHistory = useCooperationHistory;
+        }
     }
 
     class Agent : BasicAgent
     {
         private AgentIdentifier Identifier { get; }
-        private AgentConfiguration configuration;
+        public AgentConfiguration configuration { get; set; }
 
         public Agent(AgentIdentifier identifier, AgentConfiguration configuration) : base()
         {
@@ -71,7 +95,7 @@ namespace pig_challenge
             }
 
             agentCooperationFactor += this.configuration.alpha * distanceRatio;
-            agentCooperationFactor += this.configuration.beta * state.GetAgentCooperationProbability(otherAgentId);
+            agentCooperationFactor += this.configuration.beta * state.GetCooperationProbabilityGuess(this.Identifier);
             agentCooperationFactor += this.configuration.gamma * (float)state.GetAgentScore(otherAgentId) / 25.0f;
             agentCooperationFactor += this.configuration.delta;
 

@@ -16,11 +16,11 @@ namespace pig_challenge
         public int ScoreAgentB;
         public int TurnsLeft;
         public bool IsPigCapturable;
-        public float CooperationProbabilityA;
-        public float CooperationProbabilityB;
+        public float CooperationProbabilityGuessA;
+        public float CooperationProbabilityGuessB;
         private int maxTurns;
 
-        public State(int maxTurns)
+        public State(int maxTurn, AgentConfiguration configurationA, AgentConfiguration configurationB)
         {
             this.PrevPositionAgentA = new Position(0, 0);
             this.PrevPositionAgentB = new Position(0, 0);
@@ -32,17 +32,31 @@ namespace pig_challenge
             this.PositionAgentB = new Position(0,0);
             this.PositionPig = new Position(0,0);
 
-            this.ScoreAgentA = maxTurns;
-            this.ScoreAgentB = maxTurns;
-            this.TurnsLeft = maxTurns;
-            this.maxTurns = maxTurns;
+            this.ScoreAgentA = maxTurn;
+            this.ScoreAgentB = maxTurn;
+            this.TurnsLeft = maxTurn;
+            this.maxTurns = maxTurn;
 
             this.ExitCode = Game.ExitCodes.InProgress;
 
             this.IsPigCapturable = true; //TODO
 
-            this.CooperationProbabilityA = 0.5f;
-            this.CooperationProbabilityB = 0.5f;
+            if (configurationA.useCooperationHistory)
+            {
+                this.CooperationProbabilityGuessA = configurationA.initialCooperationGuess;
+            } else
+            {
+                this.CooperationProbabilityGuessA = AgentConfiguration.DEFAULT_INITIAL_GUESS;
+            }
+
+            if (configurationB.useCooperationHistory)
+            {
+                this.CooperationProbabilityGuessB = configurationB.initialCooperationGuess;
+            }
+            else
+            {
+                this.CooperationProbabilityGuessB = AgentConfiguration.DEFAULT_INITIAL_GUESS;
+            }
         }
 
         public void PlaceAgents(Map map)
@@ -111,10 +125,10 @@ namespace pig_challenge
             switch (identifier)
             {
                 case BasicAgent.AgentIdentifier.AgentA:
-                    this.CooperationProbabilityA = cooperationProbability;
+                    this.CooperationProbabilityGuessA = cooperationProbability;
                     break;
                 case BasicAgent.AgentIdentifier.AgentB:
-                    this.CooperationProbabilityB = cooperationProbability;
+                    this.CooperationProbabilityGuessB = cooperationProbability;
                     break;
                 default: throw new Exception("identifier has no cooperation probability");
             }
@@ -139,12 +153,12 @@ namespace pig_challenge
             }
         }
 
-        public float GetAgentCooperationProbability(BasicAgent.AgentIdentifier identifier)
+        public float GetCooperationProbabilityGuess(BasicAgent.AgentIdentifier identifier)
         {
             switch (identifier)
             {
-                case BasicAgent.AgentIdentifier.AgentA: return this.CooperationProbabilityA;
-                case BasicAgent.AgentIdentifier.AgentB: return this.CooperationProbabilityB;
+                case BasicAgent.AgentIdentifier.AgentA: return this.CooperationProbabilityGuessA;
+                case BasicAgent.AgentIdentifier.AgentB: return this.CooperationProbabilityGuessB;
                 default: throw new Exception("identifier has no cooperation probability");
             }
         }
