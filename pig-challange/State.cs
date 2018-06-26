@@ -15,7 +15,6 @@ namespace pig_challenge
         public int ScoreAgentA;
         public int ScoreAgentB;
         public int TurnsLeft;
-        public bool IsPigCapturable;
         public float CooperationProbabilityGuessA;
         public float CooperationProbabilityGuessB;
         private int maxTurns;
@@ -38,8 +37,6 @@ namespace pig_challenge
             this.maxTurns = maxTurn;
 
             this.ExitCode = Game.ExitCodes.InProgress;
-
-            this.IsPigCapturable = true; //TODO
 
             if (configurationA.useCooperationHistory)
             {
@@ -182,7 +179,6 @@ namespace pig_challenge
             Console.WriteLine("ScoreAgentA: " + ScoreAgentA);
             Console.WriteLine("ScoreAgentB: " + ScoreAgentB);
             Console.WriteLine("TurnsLeft: " + TurnsLeft);
-            Console.WriteLine("IsPigCapturable: " + IsPigCapturable);
             Console.WriteLine("maxTurns: " + maxTurns);
         }
     }

@@ -8,7 +8,7 @@ namespace pig_challenge
 {
     class Program
     {
-        public const bool PRINT_DEBUG_INFO = false;
+        public const bool PRINT_DEBUG_INFO = true;
 
         const int NUM_GAMES = 10;
         const int MAX_ITERATIONS = 25;

@@ -31,16 +31,7 @@ namespace pig_challenge
             // get a random new position
             Position newPigPosition = (availablePositions.Count() > 0) ? availablePositions[this.GetRandomInt(0, availablePositions.Count() - 1)] : currentPigPosition;
 
-            // analyse the gamestate and board to determine if the pig is capturable form its new position
-            this.DetermineIsPigCapturable(map, state, newPigPosition);
-
             state.MoveAgent(AgentIdentifier.Pig, newPigPosition);
-        }
-
-        // the pig is capturable if two or fewer nearby squares are empty
-        private void DetermineIsPigCapturable(Map map, State state, Position position)
-        {
-            state.IsPigCapturable = (map.GetAvailablePositions(position, state)).Count() <= 3;
         }
     }
 }
