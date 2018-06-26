@@ -8,7 +8,7 @@ namespace pig_challenge
 {
     class Program
     {
-        public const bool PRINT_DEBUG_INFO = true;
+        public const bool PRINT_DEBUG_INFO = false;
 
         const int NUM_GAMES = 10;
         const int MAX_ITERATIONS = 25;
@@ -98,11 +98,8 @@ namespace pig_challenge
                     AgentConfiguration agentConfigurationB = new AgentConfiguration(floatArray[i, 4], floatArray[i, 5], floatArray[i, 6], floatArray[i, 7], 0.75f, 0.25f, 0.5f, true );
 
                     Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
-                    csv.AppendLine($"Configuration A: {floatArray[i, 0]}, {floatArray[i, 1]}, {floatArray[i, 2]}, {floatArray[i, 3]} \n " +
-                        $"Configuration B: {floatArray[i, 4]}, {floatArray[i, 5]}, {floatArray[i, 6]}, {floatArray[i, 7]} ");
-                    Result res = tournament.Run(agentConfigurationA, agentConfigurationB);
-                    csv.AppendLine($"Total scores: \n Agent A: {res.scoreA}, Agent B: {res.scoreB}");
 
+                    Result res = tournament.Run(agentConfigurationA, agentConfigurationB);
                     resultArray[i] = res; ;
 
                     //stopwatch.Stop();
@@ -112,7 +109,16 @@ namespace pig_challenge
                 }
 
             });
-            File.WriteAllText("./results.csv", csv.ToString());
+
+            for(int i = 0; i < 81796; i++)
+            {
+                csv.AppendLine($"Configuration A: {floatArray[i, 0]}, {floatArray[i, 1]}, {floatArray[i, 2]}, {floatArray[i, 3]} \n " +
+                       $"Configuration B: {floatArray[i, 4]}, {floatArray[i, 5]}, {floatArray[i, 6]}, {floatArray[i, 7]} ");
+                csv.AppendLine($"Total scores: \n Agent A: {resultArray[i].scoreA}, Agent B: {resultArray[i].scoreB}");
+                File.WriteAllText("./results.csv", csv.ToString());
+
+                //0_1_0_0;0_1_0_0;56787;4567;
+            }
 
 
         }
