@@ -108,8 +108,8 @@ namespace pig_challenge
                         //stopwatch.Start();
 
 
-                        AgentConfiguration agentConfigurationA = new AgentConfiguration(floatArray[i, 0], floatArray[i, 1], floatArray[i, 2], 0.0f, 0.75f, 0.25f, floatArray[i, 3], true );
-                        AgentConfiguration agentConfigurationB = new AgentConfiguration(floatArray[i, 4], floatArray[i, 5], floatArray[i, 6], 0.0f, 0.75f, 0.25f, floatArray[i, 7], true );
+                        AgentConfiguration agentConfigurationA = new AgentConfiguration(floatArray[i, 0], floatArray[i, 1], floatArray[i, 2], 0.0f, 1.0f, 0.0f, floatArray[i, 3], false );
+                        AgentConfiguration agentConfigurationB = new AgentConfiguration(floatArray[i, 4], floatArray[i, 5], floatArray[i, 6], 0.0f, 1.0f, 0.0f, floatArray[i, 7], false );
 
                         Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
 
@@ -124,7 +124,7 @@ namespace pig_challenge
                 }
             );
 
-            csv.AppendLine($"sep =\";\"");
+            csv.AppendLine($"\"sep=;\"");
 
             for (int i = 0; i < TOTAL_CONFIGURATIONS; i++)
             {
