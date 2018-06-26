@@ -8,23 +8,20 @@ namespace pig_challenge
 {
     class Program
     {
-        public const bool PRINT_DEBUG_INFO = true;
+        public const bool PRINT_DEBUG_INFO = false;
 
         const int NUM_GAMES = 10;
         const int MAX_ITERATIONS = 25;
 
         static void Main(string[] args)
         {
-            float[,] floatArray = new float[81796, 8];
-            FillConfigurations(floatArray);
-
             Console.WriteLine("Welcome to the pig challenge!");
             Console.WriteLine("Press Enter to start a new tournament.");
 
             if (PRINT_DEBUG_INFO)
                 RunDemo();
             else
-                RunForRandomConfigurations(floatArray);
+                RunForRandomConfigurations();
 
             Console.ReadLine();
             
@@ -73,8 +70,11 @@ namespace pig_challenge
             Result res = tournament.Run(agentConfigurationA, agentConfigurationB);
         }
 
-        static void RunForRandomConfigurations(float[,] floatArray)
+        static void RunForRandomConfigurations()
         {
+            float[,] floatArray = new float[81796, 8];
+            FillConfigurations(floatArray);
+
             Result[] resultArray = new Result[81796];
             var csv = new StringBuilder();
 
