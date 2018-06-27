@@ -120,7 +120,7 @@ namespace pig_challenge
             Console.WriteLine($"Iteration {iteration}");
             for (int y = 0; y < 9; y++)
             {
-                Console.Write("|");
+                //Console.Write("|");
                 for (int x = 0; x < 9; x++)
                 {
                     Position position = new Position(x, y);
@@ -128,39 +128,40 @@ namespace pig_challenge
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Write("A");
+                        Console.Write(" A ");
                         Console.ResetColor();
                     }
                     else if (state.PositionAgentB.Equals(position))
                     {
                         Console.BackgroundColor = ConsoleColor.Yellow;
                         Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Write("B");
+                        Console.Write(" B ");
                         Console.ResetColor();
                     }
                     else if (state.PositionPig.Equals(position))
                     {
                         Console.BackgroundColor = ConsoleColor.Red;
-                        Console.Write("o");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(" P ");
                         Console.ResetColor();
                     }
                     else if ((x == 1 && y == 4) || (x == 7 && y == 4))
                     {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        Console.Write(" ");
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        Console.Write("   ");
                         Console.ResetColor();
                     }
                     else if (!float.IsInfinity(this.grid.GetCellCost(position)))
                     {
-                        Console.Write(" ");
+                        Console.Write("   ");
                     }
                     else
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGreen;
-                        Console.Write("X");
+                        Console.Write("   ");
                         Console.ResetColor();
                     }
-                    Console.Write("|");
+                    //Console.Write("|");
                 }
                 Console.WriteLine();
             }
