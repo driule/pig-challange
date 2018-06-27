@@ -140,7 +140,7 @@ namespace pig_challenge
                     }
                     else if (state.PositionPig.Equals(position))
                     {
-                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.BackgroundColor = ConsoleColor.Magenta;
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write(" P ");
                         Console.ResetColor();
