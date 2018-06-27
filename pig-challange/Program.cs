@@ -18,7 +18,8 @@ namespace pig_challenge
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the pig challenge!");
-            Console.WriteLine("Press Enter to start a new tournament.");
+            Console.WriteLine("Press Enter to start a new tournament...");
+            Console.ReadLine();
 
             if (PRINT_DEBUG_INFO)
                 RunDemo();
@@ -26,7 +27,6 @@ namespace pig_challenge
                 RunForRandomConfigurations();
 
             Console.ReadLine();
-            
         }
 
         static void FillConfigurations(float[,] floatArray)

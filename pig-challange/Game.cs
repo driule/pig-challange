@@ -40,7 +40,11 @@ namespace pig_challenge
         public State Run()
         {
             List<float> cooperationConditionalProbabilities;
+
             this.map.Draw(0, this.state);
+            if (Program.PRINT_DEBUG_INFO)
+                Console.ReadLine();
+
             for (int i = 0; i < this.MaxIterations; i++)
             {
                 cooperationConditionalProbabilities = this.PredictionModel.GetCooperationConditionalProbabilities(map, state, BasicAgent.AgentIdentifier.AgentA);

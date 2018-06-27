@@ -30,6 +30,11 @@ namespace pig_challenge
         {
             for (int i = 0; i < this.NumberOfGames; i++)
             {
+                if (Program.PRINT_DEBUG_INFO)
+                {
+                    Console.WriteLine($"Game #{i + 1}\n");
+                }
+
                 Game game = new Game(this.MaxIterations, configurationA, configurationB);
                 State endState = game.Run();
                 this.scoreList.Add(new int[] { endState.ScoreAgentA, endState.ScoreAgentB });
