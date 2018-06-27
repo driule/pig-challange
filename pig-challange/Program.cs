@@ -83,8 +83,8 @@ namespace pig_challenge
 
         static void RunDemo()
         {
-            AgentConfiguration agentConfigurationA = new AgentConfiguration(0.3f, 0.3f, 0.3f, 0.1f, 0.75f, 0.25f, 0.5f, true);
-            AgentConfiguration agentConfigurationB = new AgentConfiguration(0.3f, 0.3f, 0.3f, 0.1f, 0.75f, 0.25f, 0.5f, true);
+            AgentConfiguration agentConfigurationA = new AgentConfiguration(0.3f, 0.4f, 0.3f, 0.0f, 0.9f, 0.1f, 0.4f, true);
+            AgentConfiguration agentConfigurationB = new AgentConfiguration(0.1f, 0.3f, 0.5f, 0.1f, 0.9f, 0.1f, 0.6f, true);
 
             Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
             Result res = tournament.Run(agentConfigurationA, agentConfigurationB);
