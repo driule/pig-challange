@@ -145,12 +145,8 @@ namespace pig_challenge
 
         private Position GetDefectMove(Map map, State state)
         {
-            // exits at (x == 1 && y == 4) || (x == 7 && y == 4)
-            Position exitPosition1 = new Position(1, 4);
-            Position exitPosition2 = new Position(7, 4);
-
-            Tuple<Position, int> move1 = GetBestMoveToGoalPosition(map, state, exitPosition1);
-            Tuple<Position, int> move2 = GetBestMoveToGoalPosition(map, state, exitPosition2);
+            Tuple<Position, int> move1 = GetBestMoveToGoalPosition(map, state, map.GetExit1Position());
+            Tuple<Position, int> move2 = GetBestMoveToGoalPosition(map, state, map.GetExit2Position());
 
             if (move1.Item2 < move2.Item2)
             {

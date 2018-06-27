@@ -40,8 +40,8 @@ namespace pig_challenge
             }
 
             // exits
-            this.grid.UnblockCell(new Position(1, 4));
-            this.grid.UnblockCell(new Position(7, 4));
+            this.grid.UnblockCell(this.GetExit1Position());
+            this.grid.UnblockCell(this.GetExit2Position());
 
             // obstacles
             this.grid.BlockCell(new Position(3, 3));
@@ -52,9 +52,22 @@ namespace pig_challenge
             this.randomizer = new RNGCryptoServiceProvider();
         }
 
+        public Position GetExit1Position()
+        {
+            return new Position(1, 4);
+        }
+
+        public Position GetExit2Position()
+        {
+            return new Position(7, 4);
+        }
+
         public bool IsCellExit(int x, int y)
         {
-            if((x == 1 && y == 4) || (x == 7 && y == 4))
+            Position exit1 = this.GetExit1Position();
+            Position exit2 = this.GetExit2Position();
+
+            if ((x == exit1.X && y == exit1.Y) || (x == exit2.X && y == exit2.Y))
             {
                 return true;
             }
@@ -145,7 +158,7 @@ namespace pig_challenge
                         Console.Write(" P ");
                         Console.ResetColor();
                     }
-                    else if ((x == 1 && y == 4) || (x == 7 && y == 4))
+                    else if (this.GetExit1Position().Equals(position) || this.GetExit2Position().Equals(position))
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray;
                         Console.Write("   ");
