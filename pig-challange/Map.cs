@@ -126,15 +126,29 @@ namespace pig_challenge
                     Position position = new Position(x, y);
                     if (state.PositionAgentA.Equals(position))
                     {
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write("A");
+                        Console.ResetColor();
                     }
                     else if (state.PositionAgentB.Equals(position))
                     {
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+                        Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write("B");
+                        Console.ResetColor();
                     }
                     else if (state.PositionPig.Equals(position))
                     {
+                        Console.BackgroundColor = ConsoleColor.Red;
                         Console.Write("o");
+                        Console.ResetColor();
+                    }
+                    else if ((x == 1 && y == 4) || (x == 7 && y == 4))
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.Write(" ");
+                        Console.ResetColor();
                     }
                     else if (!float.IsInfinity(this.grid.GetCellCost(position)))
                     {
@@ -142,7 +156,9 @@ namespace pig_challenge
                     }
                     else
                     {
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
                         Console.Write("X");
+                        Console.ResetColor();
                     }
                     Console.Write("|");
                 }
