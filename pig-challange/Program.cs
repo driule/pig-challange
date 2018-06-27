@@ -32,27 +32,31 @@ namespace pig_challenge
         static void FillConfigurations(float[,] floatArray)
         {
             int step = 10;
+            int initialGuessStep = 25;
+
             int count = 0;
             for (int alphaA = 0; alphaA <= 100; alphaA += step)
+            {
                 for (int betaA = 0; betaA <= 100; betaA += step)
+                {
                     for (int gammaA = 0; gammaA <= 100; gammaA += step)
-                        //for (int deltaA = 0; deltaA <= 100; deltaA += step)
                     {
-                        if (alphaA + betaA + gammaA != 100)
-                            continue;
-                        for (int alphaB = 0; alphaB <= 100; alphaB += step)
-                            for (int betaB = 0; betaB <= 100; betaB += step)
-                                for (int gammaB = 0; gammaB <= 100; gammaB += step)
-                                    //for (int deltaB = 0; deltaB <= 100; deltaB += step)
-                                {
-                                    if (alphaB + betaB + gammaB != 100)
-                                        continue;
+                        for (int initialGuessA = 0; initialGuessA <= 100; initialGuessA += initialGuessStep)
+                        {
+                            if (alphaA + betaA + gammaA != 100)
+                                continue;
 
-                                    int initialGuessStep = 25;
-                                    for (int initialGuessA = 0; initialGuessA <= 100; initialGuessA += initialGuessStep)
+                            for (int alphaB = 0; alphaB <= 100; alphaB += step)
+                            {
+                                for (int betaB = 0; betaB <= 100; betaB += step)
+                                {
+                                    for (int gammaB = 0; gammaB <= 100; gammaB += step)
                                     {
                                         for (int initialGuessB = 0; initialGuessB <= 100; initialGuessB += initialGuessStep)
                                         {
+                                            if (alphaB + betaB + gammaB != 100)
+                                                continue;
+                                        
                                             floatArray[count, 0] = alphaA / 100.0f;
                                             floatArray[count, 1] = betaA / 100.0f;
                                             floatArray[count, 2] = gammaA / 100.0f;
@@ -67,7 +71,11 @@ namespace pig_challenge
                                         }
                                     }
                                 }
+                            }
+                        }
                     }
+                }
+            }
 
             //Console.WriteLine(count);
             //Console.ReadLine();
@@ -108,8 +116,8 @@ namespace pig_challenge
                         //stopwatch.Start();
 
 
-                        AgentConfiguration agentConfigurationA = new AgentConfiguration(floatArray[i, 0], floatArray[i, 1], floatArray[i, 2], 0.0f, 1.0f, 0.0f, floatArray[i, 3], false );
-                        AgentConfiguration agentConfigurationB = new AgentConfiguration(floatArray[i, 4], floatArray[i, 5], floatArray[i, 6], 0.0f, 1.0f, 0.0f, floatArray[i, 7], false );
+                        AgentConfiguration agentConfigurationA = new AgentConfiguration(floatArray[i, 0], floatArray[i, 1], floatArray[i, 2], 0.1f, 0.9f, 0.0f, floatArray[i, 3], true );
+                        AgentConfiguration agentConfigurationB = new AgentConfiguration(floatArray[i, 4], floatArray[i, 5], floatArray[i, 6], 0.1f, 0.9f, 0.0f, floatArray[i, 7], true );
 
                         Tournament tournament = new Tournament(NUM_GAMES, MAX_ITERATIONS);
 
